@@ -51,8 +51,8 @@ export default function Main() {
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const [openMais, setOpenMais] = useState(false);
 
-  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode } = useVeiculos("http://localhost:3000/usuarios");
-  const { createVeiculo } = useVeiculos("http://localhost:3000/usuarios");
+  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode } = useVeiculos("https://json-server-tau-seven.vercel.app/usuarios");
+  const { createVeiculo } = useVeiculos("https://json-server-tau-seven.vercel.app/usuarios");
 
   useEffect(() => {
     if (session?.user?.email) {

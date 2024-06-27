@@ -2,7 +2,7 @@ import axios from "axios";
 import { LoginResponse } from "@/auth"
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/usuarios';
+  const url = 'https://json-server-tau-seven.vercel.app/usuarios';
   try {
     const response = await axios.get(url, {
       params: {

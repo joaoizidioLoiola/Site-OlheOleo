@@ -15,7 +15,7 @@ export interface RegisterResponse {
 }
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/usuarios';
+  const url = 'https://json-server-tau-seven.vercel.app/usuarios';
 
   try {
     // Verificar se o CPF já está cadastrado

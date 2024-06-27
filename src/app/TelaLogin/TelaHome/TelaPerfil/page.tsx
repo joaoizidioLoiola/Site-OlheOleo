@@ -46,7 +46,7 @@ const ProfilePage: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const url = 'http://localhost:3000/usuarios';
+  const url = 'https://json-server-tau-seven.vercel.app/usuarios';
 
   const getUserData = useCallback(async (email: string) => {
     try {
