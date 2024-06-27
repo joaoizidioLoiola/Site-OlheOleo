@@ -1,0 +1,63 @@
+{
+  "usuarios": [
+    {
+      "id": "1ac1",
+      "name": "Conta Teste",
+      "cpf": "42655544424",
+      "email": "teste_@email.com",
+      "telefone": "88941415252",
+      "password": "123",
+      "veiculos": [
+        {
+          "id": "1719353156235",
+          "modelo": "as",
+          "url_imagem": "/car.jpg",
+          "quilometragem": "11",
+          "placa": "aa",
+          "tipo_oleo": "as"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "testee",
+      "cpf": "123.456.789-99",
+      "email": "testee@email.com",
+      "telefone": "(12) 98554-6666",
+      "password": "123",
+      "veiculos": []
+    },
+    {
+      "id": "22SS",
+      "name": "Joao",
+      "cpf": "123.456.655-89",
+      "email": "teste@eemail.com",
+      "telefone": "(12) 98554-2232",
+      "password": "123",
+      "veiculos": [
+        {
+          "id": "1719443039070",
+          "modelo": "TESTE",
+          "url_imagem": "/car.jpg",
+          "quilometragem": "2566",
+          "placa": "ASX2B33",
+          "tipo_oleo": "NOVO",
+          "modelo_ultimo_oleo": "SHELL",
+          "filtro_oleo": "A",
+          "filtro_ar": "A",
+          "filtro_combustivel": "A",
+          "filtro_cambio": "A"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "Novo",
+      "cpf": "456.123.554-22",
+      "email": "teste2@em.com",
+      "telefone": "(12) 98554-4462",
+      "password": "123",
+      "veiculos": []
+    }
+  ]
+}
