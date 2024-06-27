@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start:all": "concurrently \"npm run start:json-server\" \"npm run start:next\"", 
     "dev:server": "json-server --watch src/app/api/db.json --port 3000",
     "dev:next": "next dev -p 3001",
     "dev": "concurrently -k -n \"json-server,next\" \"npm run dev:server\" \"npm run dev:next\"",
     "build": "next build",
-    "lint": "next lint",
-    "start": "concurrently -k -n \"json-server,next\" \"npx json-server src/app/api/db.json --port 3000\" \"next start -p 3001\""
+    "start:next": "next start -p $PORT"
   },
   "dependencies": {
     "@emotion/cache": "latest",
