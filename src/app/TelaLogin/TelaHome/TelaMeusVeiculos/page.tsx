@@ -49,7 +49,7 @@ export default function Main() {
   const { data: session } = useSession();
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const [openMais, setOpenMais] = useState(false);
-  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode, createVeiculo } = useVeiculos("http://localhost:3000/usuarios");
+  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode, createVeiculo } = useVeiculos("https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios");
   
 
 
