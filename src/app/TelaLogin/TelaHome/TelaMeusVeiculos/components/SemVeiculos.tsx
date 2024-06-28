@@ -5,17 +5,18 @@ import HeaderNavigation from "../../../../../components/HeaderNavigation";
 import { useEffect, useState } from "react";
 import Modal_AddVeiculos from "./modalAddVeiculos";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { Veiculo } from "@/hooks/useVeiculos";
-import {User} from '@/auth'
 import useVeiculos from "@/hooks/useVeiculos";
 
 
 export default function SemVeiculos() {
-  const url ='https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url ='http://localhost:3000/usuarios';
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
-  const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
-  const [reloadPage, setReloadPage] = useState(false);
+  const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);                    
   const { createVeiculo } = useVeiculos(url);
+  const [reloadPage, setReloadPage] = useState(false);
+  const router = useRouter();
 
   const handleCloseModalAddVeiculo = () => {
     setOpenModalAddVeiculo(false);
@@ -25,7 +26,8 @@ export default function SemVeiculos() {
     try {
       await createVeiculo(email, newVeiculo);
       await getVeiculos();
-      setOpenModalAddVeiculo(false);
+      setReloadPage(true);
+      // setOpenModalAddVeiculo(false);
     } catch (error){
       console.log('Erro ao add o veiculo', error);
     }
@@ -47,19 +49,16 @@ export default function SemVeiculos() {
     }
   }
 
-  useEffect(() => {
-    getVeiculos();
-  }, [reloadPage]);
-
   useEffect (() => {
+    getVeiculos();
     if (reloadPage) {
-      setReloadPage(true);
+      setReloadPage(false);
       window.location.reload();
     }
   }, [reloadPage])
 
   return (
-    <main className="flex w-full h-full bg-fund flex-col">
+    <main className="flex w-full h-dvh bg-fund flex-col">
       <HeaderNavigation />
       {veiculos.length === 0 &&(
         <>
@@ -88,7 +87,7 @@ export default function SemVeiculos() {
               </div>
             </Slider>
           </div>
-          <div className="flex justify-center items-center mt-[40%]">
+          <div className="flex justify-center items-center mt-[40%] lg:mt-14">
             <button
               className="flex justify-center items-center bg-txt text-grid w-40 h-20 border
               rounded-md shadow-sm"

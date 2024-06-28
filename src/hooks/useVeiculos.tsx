@@ -45,7 +45,6 @@ const useVeiculos = (apiUrl: string) => {
     try {
       const response = await axios.get(`${apiUrl}?email=${email}`);
       const user = response.data[0];
-
       if (user) {
         user.veiculos.push(veiculo);
         await axios.put(`${apiUrl}/${user.id}`, user);
@@ -115,16 +114,13 @@ const useVeiculos = (apiUrl: string) => {
   };
 
   const handleEditVeiculo = (veiculo: Veiculo) => {
-    console.log("Editando:", veiculo);
     setEditedVeiculo({ ...veiculo });
     setIsEditMode(true);
   };
 
   useEffect(() => {
     const email = session?.user?.email || '';
-    if (!email) {
-      router.push('/TelaLogin');
-    } else {
+    if (email) {
       getVeiculos(email);
     }
   }, [apiUrl, router, session]);
@@ -141,6 +137,7 @@ const useVeiculos = (apiUrl: string) => {
 
   return {
     veiculos,
+    setVeiculos,
     getVeiculos,
     createVeiculo,
     deleteVeiculo,

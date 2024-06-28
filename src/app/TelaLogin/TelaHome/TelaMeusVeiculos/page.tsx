@@ -47,12 +47,11 @@ const theme = createTheme({
 
 export default function Main() {
   const { data: session } = useSession();
-
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const [openMais, setOpenMais] = useState(false);
+  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode, createVeiculo } = useVeiculos("http://localhost:3000/usuarios");
+  
 
-  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode } = useVeiculos("https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios");
-  const { createVeiculo } = useVeiculos("https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios");
 
   useEffect(() => {
     if (session?.user?.email) {
@@ -86,7 +85,7 @@ export default function Main() {
     return <p>Carregando...</p>
   }
 
-  if (veiculos.length == 0) {
+  if (veiculos.length === 0) {
     return <SemVeiculos />;
   } else {
     return (
@@ -165,7 +164,6 @@ export default function Main() {
                         />
                       </div>
                       <div className="w-4/5 h-full overflow-hidden rounded-lg justify-center items-center">
-
                         <div>
                           <VeiculoForm
                             veiculo={veiculo}
@@ -190,9 +188,7 @@ export default function Main() {
           <Modal_AddVeiculos
             isOpen={openModalAddVeiculo}
             onClose={handleCloseModalAddVeiculo}
-            onAdd={
-              handleAddVeiculo
-            }
+            onAdd={handleAddVeiculo}
           />
         </main >
       </ThemeProvider>

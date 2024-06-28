@@ -85,8 +85,6 @@ export default function Modal_AddVeiculos({
       onClose();
       reset();
       setSelectedImage('/car.jpg');
-
-      router.push('/TelaLogin/TelaHome/TelaMeusVeiculos')
     } catch (error) {
       console.log('Erro ao adicionar veículo:', error);
     }

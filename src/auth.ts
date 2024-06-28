@@ -45,7 +45,7 @@ const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
 
-        const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+        const url = 'http://localhost:3000/usuarios';
         try {
           const response = await axios.get(url, {
             params: {
@@ -104,7 +104,7 @@ const authOptions = {
 export default NextAuth(authOptions);
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url ='https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url ='http://localhost:3000/usuarios';
 
   try {
     const cpfExistsResponse = await axios.get(url, {

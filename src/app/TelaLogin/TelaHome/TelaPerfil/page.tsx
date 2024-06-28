@@ -46,7 +46,7 @@ const ProfilePage: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
 
   const getUserData = useCallback(async (email: string) => {
     try {
@@ -130,7 +130,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <main className='flex flex-col w-full h-full bg-gray-100'>
+      <main className='flex flex-col w-full h-max bg-gray-100'>
         <HeaderNavigation />
         <div className='flex justify-center mt-[5%]'>
           <h2 className='flex justify-center w-[95%] text-txt text-2xl font-bold mb-2 border-b'>Meu Perfil</h2>
