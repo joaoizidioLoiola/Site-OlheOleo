@@ -15,7 +15,7 @@ export interface RegisterResponse {
 }
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'https://json-server-tau-seven.vercel.app/usuarios';
+  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
 
   try {
     // Verificar se o CPF já está cadastrado

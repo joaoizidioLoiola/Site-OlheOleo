@@ -58,30 +58,6 @@ const useVeiculos = (apiUrl: string) => {
     }
   };
 
-  //     const email = session?.user?.email || '';
-  //     if (!email) {
-  //       throw new Error('Email do usuário não encontrado na sessão');
-  //     }
-  //     const response = await axios.get(`${apiUrl}?email=${email}`);
-  //     if (response.data.length === 0) {
-  //       throw new Error('Usuário não encontrado');
-  //     }
-  //     const user = response.data[0];
-  //     const updatedVeiculos = user.veiculos ? [...user.veiculos, newVeiculo] : [newVeiculo];
-  //     const putUrl = `${apiUrl}/${user.id}`;
-
-  //     await axios.put(putUrl, {
-  //       ...user,
-  //       veiculos: updatedVeiculos,
-  //     });
-
-  //     setVeiculos(updatedVeiculos);
-  //     setUser({ ...user, veiculos: updatedVeiculos });
-  //   } catch (error) {
-  //     handleAxiosError(error); 
-  //   }
-  // };
-
   const deleteVeiculo = async (id: string) => {
     try {
       const email = session?.user?.email || '';
@@ -147,7 +123,7 @@ const useVeiculos = (apiUrl: string) => {
   useEffect(() => {
     const email = session?.user?.email || '';
     if (!email) {
-      // router.push('/TelaLogin');
+      router.push('/TelaLogin');
     } else {
       getVeiculos(email);
     }

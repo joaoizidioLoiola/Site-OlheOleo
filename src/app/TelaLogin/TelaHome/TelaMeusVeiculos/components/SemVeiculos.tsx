@@ -11,7 +11,7 @@ import useVeiculos from "@/hooks/useVeiculos";
 
 
 export default function SemVeiculos() {
-  const url ='https://json-server-tau-seven.vercel.app/usuarios';
+  const url ='https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const [reloadPage, setReloadPage] = useState(false);
@@ -50,7 +50,6 @@ export default function SemVeiculos() {
   useEffect(() => {
     getVeiculos();
   }, [reloadPage]);
-//[reloadPage]
 
   useEffect (() => {
     if (reloadPage) {

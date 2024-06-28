@@ -46,7 +46,7 @@ const ProfilePage: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const url = 'https://json-server-tau-seven.vercel.app/usuarios';
+  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
 
   const getUserData = useCallback(async (email: string) => {
     try {

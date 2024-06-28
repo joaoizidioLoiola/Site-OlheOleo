@@ -2,7 +2,7 @@ import axios from "axios";
 import { LoginResponse } from "@/auth"
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const url = 'https://json-server-tau-seven.vercel.app/usuarios';
+  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
   try {
     const response = await axios.get(url, {
       params: {
