@@ -49,7 +49,7 @@ interface AgendarManuProps {
 
 export default function AgendarManu({ onClose }: AgendarManuProps) {
   const { data: session } = useSession();
-  const { user, veiculos, createAgendamento, getVeiculos } = useVeiculos("http://localhost:3000/usuarios");
+  const { user, veiculos, createAgendamento, getVeiculos } = useVeiculos("https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios");
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedMaintenanceTypes, setSelectedMaintenanceTypes] = useState<string[]>([]);

@@ -17,7 +17,7 @@ export interface RegisterResponse {
 }
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'http://localhost:3000/usuarios';
+  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
 
   try {
    

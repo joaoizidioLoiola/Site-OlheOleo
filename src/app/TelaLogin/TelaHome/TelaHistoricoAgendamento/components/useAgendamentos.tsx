@@ -19,7 +19,7 @@ const useAgendamentosUsuario = () => {
     useEffect(() => {
         const fetchAgendamentos = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/usuarios?email=${session?.user?.email}`);
+                const response = await axios.get(`https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios?email=${session?.user?.email}`);
                 const userData = response.data[0];
                 if (userData && userData.agendamentos){
                     setAgendamentos(userData.agendamentos);

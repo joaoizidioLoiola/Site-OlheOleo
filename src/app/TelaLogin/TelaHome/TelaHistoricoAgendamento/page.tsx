@@ -19,7 +19,7 @@ export default function TelaHistoricoAgendamento() {
         const fetchUsers = async () => {
             if (session?.user?.email) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/usuarios?email=${session?.user?.email}`);
+                    const response = await axios.get(`https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios?email=${session?.user?.email}`);
                     const userData = response.data;
                     if (userData) {
                         setUser(userData);
