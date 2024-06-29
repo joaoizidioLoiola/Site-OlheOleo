@@ -276,7 +276,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({
                 </Button>
               </div>
               <div>
-                <Button onClick={deleteVeiculo} variant="contained" color="error" startIcon={<DeleteIcon />} className='bg-black'>
+                <Button onClick={deleteVeiculo} variant="contained" color="error" startIcon={<DeleteIcon />} >
                   Excluir
                 </Button>
               </div>

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useSession } from 'next-auth/react';
 import useVeiculos, { Veiculo } from '@/hooks/useVeiculos';
-import Button_AddFoto from './Button_AddFoto';
+import Button_AddFotoCar from '../components/Button_AddFotoCar';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
 
@@ -31,7 +31,6 @@ export default function Modal_AddVeiculos({
   isOpen, onClose, onAdd }: Modal_AddVeiculosProps) {
   const { data: session, status } = useSession();
 
-  const router = useRouter();
 
   const [selectedImage, setSelectedImage] = useState<string>(() => {
     if (typeof window !== 'undefined') {
@@ -126,7 +125,7 @@ export default function Modal_AddVeiculos({
                     height={250}
                   />
 
-                  <Button_AddFoto selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                  <Button_AddFotoCar selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
                   <input
                     type="text"
                     placeholder="Modelo"

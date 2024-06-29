@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios'; 
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { User } from '@/auth';
+import { Agendamento, User } from '@/auth';
 
 export type Veiculo = {
   id: string,
@@ -24,6 +24,7 @@ const useVeiculos = (apiUrl: string) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
+
   const [editedVeiculo, setEditedVeiculo] = useState<Veiculo | null>(null);
   const [user, setUser] = useState<User>();
   const [isEditMode, setIsEditMode] = useState(false);
@@ -118,6 +119,28 @@ const useVeiculos = (apiUrl: string) => {
     setIsEditMode(true);
   };
 
+  const createAgendamento = async (agendamentoData: Agendamento) => {
+    try {
+      if (!user) {
+        console.error('Usuário não autenticado.');
+        return;
+      }
+      // Adicionar novo agendamento ao usuário existente
+      const novoUsuario: User = {
+        ...user,
+        agendamentos: user.agendamentos ? [...user.agendamentos, agendamentoData] : [agendamentoData],
+      };
+
+      // Atualizar o usuário com o novo agendamento
+      await axios.put(`${apiUrl}/${user.id}`, novoUsuario);
+
+      // Atualizar o estado local do usuário
+      setUser(novoUsuario);
+    } catch (error) {
+      console.error('Erro ao criar agendamento:', error);
+      throw error;
+    }
+  };
   useEffect(() => {
     const email = session?.user?.email || '';
     if (email) {
@@ -137,6 +160,8 @@ const useVeiculos = (apiUrl: string) => {
 
   return {
     veiculos,
+    user,
+    createAgendamento,
     setVeiculos,
     getVeiculos,
     createVeiculo,

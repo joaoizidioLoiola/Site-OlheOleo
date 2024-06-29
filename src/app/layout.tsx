@@ -1,9 +1,10 @@
-import { Inter } from "next/font/google";
+import { Josefin_Sans } from "next/font/google";
 import "./globals.css";
 import { Metadata } from "next";
 import SessionProvider from "@/components/SessionProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+
+const inter = Josefin_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Teste next App",

@@ -1,9 +1,8 @@
 "use client";
 
-import FooterNavigation from "@/app/TelaLogin/TelaHome/TelaPerfil/Componentes/FooterNavigation";
+import FooterNavigation from "@/app/TelaLogin/TelaHome/TelaPerfil/components/FooterNavigation";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function Home() {
   return (

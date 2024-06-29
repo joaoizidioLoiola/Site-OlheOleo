@@ -4,60 +4,85 @@
       "id": "1ac1",
       "name": "Conta Teste",
       "cpf": "42655544424",
+      "url_imagem": "/avatarPerfil.svg",
       "email": "teste_@email.com",
       "telefone": "88941415252",
       "password": "123",
       "veiculos": [
         {
-          "id": "1719353156235",
-          "modelo": "as",
-          "url_imagem": "/car.jpg",
-          "quilometragem": "11",
-          "placa": "aa",
-          "tipo_oleo": "as"
-        }
-      ]
-    },
-    {
-      "id": "",
-      "name": "testee",
-      "cpf": "123.456.789-99",
-      "email": "testee@email.com",
-      "telefone": "(12) 98554-6666",
-      "password": "123",
-      "veiculos": []
-    },
-    {
-      "id": "22SS",
-      "name": "Joao",
-      "cpf": "123.456.655-89",
-      "email": "teste@eemail.com",
-      "telefone": "(12) 98554-2232",
-      "password": "123",
-      "veiculos": [
-        {
-          "id": "1719581567830",
-          "modelo": "NOvoE",
-          "url_imagem": "/car.jpg",
-          "quilometragem": "12",
-          "placa": "ASD1W22",
-          "tipo_oleo": "SAS",
-          "modelo_ultimo_oleo": "DDA",
-          "filtro_oleo": "S",
+          "id": "1719587136730",
+          "modelo": "Novoo",
+          "url_imagem": "blob:http://localhost:3001/05c27dcb-bf43-4a5a-8502-49a8beb69081",
+          "quilometragem": "1500",
+          "placa": "ABC2D22",
+          "tipo_oleo": "SS",
+          "modelo_ultimo_oleo": "AA",
+          "filtro_oleo": "AA",
           "filtro_ar": "",
           "filtro_combustivel": "",
           "filtro_cambio": ""
         }
+      ],
+      "agendamentos": [
+        {
+          "id_oficina": "0.7528871039222425",
+          "modelo_veiculo": "Novoo",
+          "nome_oficina": "workshop2",
+          "data_agendamento": "2024-06-30T03:00:00.000Z",
+          "status": "pendente",
+          "tipo_manutencao": "Filtro de Óleo, Óleo do Motor, Filtro de Combustível"
+        }
       ]
     },
     {
-      "id": "",
-      "name": "Novo",
-      "cpf": "456.123.554-22",
-      "email": "teste2@em.com",
-      "telefone": "(12) 98554-4462",
+      "id": "45a8259a-f290-4ac1-a931-4dbf66113682",
+      "name": "TesteNovo",
+      "url_imagem": "",
+      "cpf": "123.458.776-66",
+      "email": "tes2@e.com",
+      "telefone": "(12) 95584-4111",
       "password": "123",
-      "veiculos": []
+      "veiculos": [
+        {
+          "id": "1719696577474",
+          "modelo": "Novi",
+          "url_imagem": "blob:http://localhost:3001/0d6f7dad-a722-46e0-85d7-7766b117562d",
+          "quilometragem": "1232",
+          "placa": "ASD2S11",
+          "tipo_oleo": "NOVO",
+          "modelo_ultimo_oleo": "TEST",
+          "filtro_oleo": "",
+          "filtro_ar": "",
+          "filtro_combustivel": "",
+          "filtro_cambio": ""
+        }
+      ],
+      "agendamentos": [
+        {
+          "id_Agendamento": "0.07694346821808784",
+          "modelo_veiculo": "Novi",
+          "nome_oficina": "workshop1",
+          "data_agendamento": "2024-06-30T03:00:00.000Z",
+          "status": "pendente",
+          "tipo_manutencao": "Filtro de Câmbio"
+        },
+        {
+          "id_Agendamento": "0.1154782018740288",
+          "modelo_veiculo": "Novi",
+          "nome_oficina": "workshop1",
+          "data_agendamento": "2024-07-09T03:00:00.000Z",
+          "status": "pendente",
+          "tipo_manutencao": "Filtro de Combustível, Filtro de Ar"
+        }
+      ]
+    }
+  ],
+  "oficinas": [
+    {
+      "id": "1",
+      "name": "Oficina Teste 1",
+      "cnpj": "123456789",
+      "manutencao": []
     }
   ]
 }

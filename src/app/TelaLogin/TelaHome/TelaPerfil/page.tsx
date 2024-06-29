@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import HeaderNavigation from '../../../../components/HeaderNavigation';
 import UserForm from '@/app/TelaCadastro/components/UserForm';
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { User } from '../../../../../services/auth';
@@ -11,6 +12,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from "@mui/icons-material/Save";
+import Button_AddFoto from '../TelaMeusVeiculos/components/Button_AddFotoCar';
+import Image from 'next/image';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -45,8 +48,9 @@ const ProfilePage: React.FC = () => {
   const [editedUser, setEditedUser] = useState<User | null>(null);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
-  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
 
   const getUserData = useCallback(async (email: string) => {
     try {
@@ -103,7 +107,11 @@ const ProfilePage: React.FC = () => {
     try {
       if (userData) {
         const response = await axios.delete(`${url}/${userData.id}`);
+        const handleLogout = async () => {
+          await signOut({ redirect: false });
+        };
         if (response.status === 200) {
+          handleLogout();
           router.push('/TelaLogin');
         } else {
           setError('Erro ao excluir o perfil.');
@@ -123,6 +131,21 @@ const ProfilePage: React.FC = () => {
       }));
     }
   };
+
+  const [selectedImage, setSelectedImage] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const storedImage = localStorage.getItem('selectedImage');
+      return storedImage ? storedImage : '/avatarPerfil.svg';
+    }
+    return '/avatarPerfil.svg';
+  });
+
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedImage', selectedImage);
+    }
+  }, [selectedImage]);
 
   if (!session) {
     return <p>Carregando...</p>;

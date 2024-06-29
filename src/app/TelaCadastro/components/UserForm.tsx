@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '../../../../services/auth';
+import { v4 as uuidv4 } from "uuid";
 
 type UserFormProps = {
   error: string | null;
@@ -13,6 +14,7 @@ type UserFormProps = {
 const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNewUser, onChange, readOnly }) => {
   
   const [name, setName] = useState('');
+  const [ url_imagem, setUrlImagem ] = useState('');
   const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -23,6 +25,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
   useEffect(() => {
     if (initialData) {
       setName(initialData.name);
+      setUrlImagem(initialData.url_imagem);
       setCpf(initialData.cpf);
       setEmail(initialData.email);
       setTelefone(initialData.telefone);
@@ -33,7 +36,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const id = initialData?.id || '';
+    const id = uuidv4();
     if (password !== confirmPassword) {
       alert('As senhas não coincidem.');
       return;
@@ -41,11 +44,13 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
     const userData: User = {
       id,
       name,
+      url_imagem,
       cpf,
       email,
       telefone,
       password,
       veiculos: initialData?.veiculos || [],
+      agendamentos: initialData?.agendamentos || []
     };
 
     onSubmit(userData);
@@ -63,6 +68,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
   const formatCPF = (value: string) => {
     return value
       .replace(/\D/g, '')
+      .slice(0, 11)
       .replace(/(\d{3})(\d)/, '$1.$2')
       .replace(/(\d{3})(\d)/, '$1.$2')
       .replace(/(\d{3})(\d{1,2})$/, '$1-$2');

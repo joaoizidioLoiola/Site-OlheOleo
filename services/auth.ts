@@ -3,11 +3,13 @@ import axios from 'axios';
 export interface User {
   id: string;
   name: string;
+  url_imagem: string;
   cpf: string;
   email: string;
   telefone: string;
   password: string;
   veiculos?: any[];
+  agendamentos?: any[];
 }
 
 interface LoginResponse {
@@ -29,7 +31,7 @@ interface RegisterResponse {
 }
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
   try {
     const response = await axios.get(url, {
       params: {
@@ -53,7 +55,7 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 };
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
 
   try {
     const cpfExistsResponse = await axios.get(url, {

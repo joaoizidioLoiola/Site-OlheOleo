@@ -1,8 +1,10 @@
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 export interface User {
-  id?: string;
+  id: string;
   nome: string;
+  url_imagem: string;
   cpf: string;
   email: string;
   telefone: string;
@@ -15,9 +17,15 @@ export interface RegisterResponse {
 }
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
 
   try {
+   
+    const newUser: User = {
+      ...userData,
+      id: uuidv4(),
+    };
+
     // Verificar se o CPF já está cadastrado
     const cpfExists = await checkIfExists(url, { cpf: userData.cpf });
     if (cpfExists) {
@@ -36,8 +44,10 @@ export const register = async (userData: User): Promise<RegisterResponse> => {
       return { success: false };
     }
 
+   
+
     // Submeter os dados do usuário para o backend
-    const response = await axios.post(url, userData);
+    const response = await axios.post(url, newUser);
     return { success: true, user: response.data };
   } catch (error) {
     console.error('Error during registration:', error);

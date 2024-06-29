@@ -10,6 +10,16 @@ export type User = {
   telefone: string;
   password: string;
   veiculos?: any[];
+  agendamentos?: any[];
+}
+
+export type Agendamento = {
+  id_Agendamento: string;
+  modelo_veiculo: string;
+  nome_oficina: string;
+  data_agendamento: string;
+  status: 'pendente' | 'cancelado' | 'concluido';
+  tipo_manutencao: string;
 }
 
 export interface LoginResponse {
@@ -45,7 +55,7 @@ const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
 
-        const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+        const url = 'http://localhost:3000/usuarios';
         try {
           const response = await axios.get(url, {
             params: {
@@ -104,7 +114,7 @@ const authOptions = {
 export default NextAuth(authOptions);
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url ='https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url ='http://localhost:3000/usuarios';
 
   try {
     const cpfExistsResponse = await axios.get(url, {

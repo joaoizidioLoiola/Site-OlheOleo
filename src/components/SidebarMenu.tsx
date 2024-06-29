@@ -23,7 +23,7 @@ export default function SidebarMenu() {
           <p>Meus Veículos</p>
         </div>
       </Link>
-      <Link href="/TelaLogin/TelaHome/TelaAgendamento">
+      <Link href="/TelaLogin/TelaHome/TelaHistoricoAgendamento">
         <div className="flex items-center border-b border-stone-900 w-screen py-2 ">
           <img src="/calendarioIcon.svg" alt="" className="cursor-pointer mr-2" />
           <p>Meus Agendamentos</p>
