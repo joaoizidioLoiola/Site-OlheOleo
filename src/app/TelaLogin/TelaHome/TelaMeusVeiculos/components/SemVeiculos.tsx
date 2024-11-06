@@ -11,9 +11,9 @@ import useVeiculos from "@/hooks/useVeiculos";
 
 
 export default function SemVeiculos() {
-  const url ='https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url = 'https://server-bancojs-ed773394a807.herokuapp.com/usuarios';
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
-  const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);                    
+  const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const { createVeiculo } = useVeiculos(url);
   const [reloadPage, setReloadPage] = useState(false);
   const router = useRouter();
@@ -22,13 +22,13 @@ export default function SemVeiculos() {
     setOpenModalAddVeiculo(false);
   };
 
-  const handleAddVeiculo = async (email:string,newVeiculo: Veiculo) => {
+  const handleAddVeiculo = async (email: string, newVeiculo: Veiculo) => {
     try {
       await createVeiculo(email, newVeiculo);
       await getVeiculos();
       setReloadPage(true);
       // setOpenModalAddVeiculo(false);
-    } catch (error){
+    } catch (error) {
       console.log('Erro ao add o veiculo', error);
     }
   };
@@ -49,7 +49,7 @@ export default function SemVeiculos() {
     }
   }
 
-  useEffect (() => {
+  useEffect(() => {
     getVeiculos();
     if (reloadPage) {
       setReloadPage(false);
@@ -60,7 +60,7 @@ export default function SemVeiculos() {
   return (
     <main className="flex w-full h-dvh bg-fund flex-col">
       <HeaderNavigation />
-      {veiculos.length === 0 &&(
+      {veiculos.length === 0 && (
         <>
           <div className="w-full  h-auto mt-20">
             <Slider

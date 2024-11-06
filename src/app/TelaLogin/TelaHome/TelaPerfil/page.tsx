@@ -50,7 +50,7 @@ const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
-  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url = 'https://server-bancojs-ed773394a807.herokuapp.com/usuarios';
 
   const getUserData = useCallback(async (email: string) => {
     try {

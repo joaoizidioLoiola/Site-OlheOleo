@@ -50,7 +50,7 @@ interface AgendarManuProps {
 
 export default function AgendarManu({ onClose }: AgendarManuProps) {
   const { data: session } = useSession();
-  const { user, veiculos, createAgendamento, getVeiculos } = useVeiculos("https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios");
+  const { user, veiculos, createAgendamento, getVeiculos } = useVeiculos("https://server-bancojs-ed773394a807.herokuapp.com/usuarios");
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedMaintenanceTypes, setSelectedMaintenanceTypes] = useState<string[]>([]);
@@ -61,7 +61,7 @@ export default function AgendarManu({ onClose }: AgendarManuProps) {
     if (session?.user?.email) {
       getVeiculos(session.user.email);
     }
-    }, [session]);
+  }, [session]);
 
   const handleCheckboxChange = (value: string) => {
     setSelectedMaintenanceTypes(prevSelected =>
@@ -77,7 +77,7 @@ export default function AgendarManu({ onClose }: AgendarManuProps) {
         console.error('Usuário não autenticado.');
         return;
       }
-      
+
       if (!user) {
         console.error('Usuário não encontrado.');
         return;

@@ -17,10 +17,10 @@ export interface RegisterResponse {
 }
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'https://json-serv-0f8cbf4ce8d8.herokuapp.com/usuarios';
+  const url = 'https://server-bancojs-ed773394a807.herokuapp.com/usuarios';
 
   try {
-   
+
     const newUser: User = {
       ...userData,
       id: uuidv4(),
@@ -43,8 +43,6 @@ export const register = async (userData: User): Promise<RegisterResponse> => {
     if (telefoneExists) {
       return { success: false };
     }
-
-   
 
     // Submeter os dados do usuário para o backend
     const response = await axios.post(url, newUser);
