@@ -51,7 +51,7 @@ export default function Main() {
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const [openAgendarManu, setOpenAgendarManu] = useState(false);
   const [openMais, setOpenMais] = useState(false);
-  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode, createVeiculo } = useVeiculos("https://server-bancojs-ed773394a807.herokuapp.com/usuarios");
+  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode, createVeiculo } = useVeiculos("http://localhost:3000/usuarios");
 
 
 
@@ -173,8 +173,7 @@ export default function Main() {
                           }}
                         />
                       </div>
-                      <div className="w-4/5 h-full overflow-hidden rounded-lg justify-center items-center">
-                        <div>
+                      <div className="h-full overflow-hidden rounded-lg ">
                           <VeiculoForm
                             veiculo={veiculo}
                             isEditMode={isEditMode}
@@ -185,7 +184,6 @@ export default function Main() {
                             deleteVeiculo={() => deleteVeiculo(veiculo.id)}
                             handleEditVeiculo={() => handleEditVeiculo(veiculo)}
                           />
-                        </div>
                       </div>
                     </div>
                   </div>

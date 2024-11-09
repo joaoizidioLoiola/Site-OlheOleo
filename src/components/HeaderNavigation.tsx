@@ -28,7 +28,7 @@ export default function HeaderNavigation() {
             {status === "loading" ? (
               <span>Carregando...</span>
             ) : session ? (
-              <span>Olá {session.user?.name}</span>
+              <span className='text-white'>Olá {session.user?.name}</span>
             ) : (
               <div className="flex space-x-2">
                 <Link href="/TelaLogin" className="text-white">Entre</Link>

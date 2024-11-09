@@ -11,7 +11,7 @@ import useVeiculos from "@/hooks/useVeiculos";
 
 
 export default function SemVeiculos() {
-  const url = 'https://server-bancojs-ed773394a807.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const { createVeiculo } = useVeiculos(url);

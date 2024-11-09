@@ -81,7 +81,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({
                 type="text"
                 id="modelo"
                 name="modelo"
-                className="text-black border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-black border border-gray-300 rounded-md p-1 w-1/2"
                 value={editedVeiculo?.modelo || ''}
                 onChange={(e) => handleChange(e, "modelo")}
               />
@@ -258,15 +258,13 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({
         </div>
         <div className="flex justify-around py-2 pl-2">
           {isEditMode && editedVeiculo?.id === veiculo.id ? (
-            <div className="flex justify-around py-2">
-              <Button onClick={handleSaveChanges} variant="contained" endIcon={<SaveIcon />} color='ochre' style={{ color: 'white' }} >
+            <div className="flex justify-around py-2 space-x-2">
+              <Button onClick={handleToggleEditMode} variant="contained" style={{ color: 'white', background: 'red' }}>
+                  Cancelar
+              </Button>
+              <Button onClick={handleSaveChanges} variant="contained" endIcon={<SaveIcon />} style={{ color: 'white', background: 'green' }} >
                 Salvar
               </Button>
-              <div className="ml-2">
-                <Button onClick={handleToggleEditMode} variant="contained" color="ochre" style={{ color: 'white' }}>
-                  Cancelar
-                </Button>
-              </div>
             </div>
           ) : (
             <div className="flex justify-around py-2">

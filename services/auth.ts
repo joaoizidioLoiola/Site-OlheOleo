@@ -31,7 +31,7 @@ interface RegisterResponse {
 }
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const url = 'https://server-bancojs-ed773394a807.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
   try {
     const response = await axios.get(url, {
       params: {
@@ -55,7 +55,7 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 };
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'https://server-bancojs-ed773394a807.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
 
   try {
     const cpfExistsResponse = await axios.get(url, {

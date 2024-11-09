@@ -50,7 +50,7 @@ const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
-  const url = 'https://server-bancojs-ed773394a807.herokuapp.com/usuarios';
+  const url = 'http://localhost:3000/usuarios';
 
   const getUserData = useCallback(async (email: string) => {
     try {
@@ -153,60 +153,63 @@ const ProfilePage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <main className='flex flex-col w-full h-max bg-gray-100'>
+      {/* <main className='flex flex-col h-max bg-gray-100'> */}
+      <main className='flex flex-col h-screen bg-gray-100 items-center'>
         <HeaderNavigation />
-        <div className='flex justify-center mt-[5%]'>
-          <h2 className='flex justify-center w-[95%] text-txt text-2xl font-bold mb-2 border-b'>Meu Perfil</h2>
-        </div>
-        <div className='flex flex-row items-center space-x-4'>
-          <div className='flex justify-center'>
-            <img src="/avatarPerfil.svg" alt="Avatar" className='ml-2 w-24' />
+        <div className='max-w-[500px] flex justify-center flex-col'>
+          <div className='flex justify-center mt-[5%]'>
+            <h2 className='flex justify-center w-[95%] text-txt text-2xl font-bold mb-2'>Meu Perfil</h2>
           </div>
-          <div className='flex flex-col justify-center items-center'>
-            <Button type="button" className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[80%] max-h-[15%] mb-2 flex items-center justify-center" variant="contained" color="ochre" style={{ color: 'white' }}>
-              Selecionar Foto
-            </Button>
-            <p className='flex flex-col justify-center text-txt text-[10px] w-[75%] text-justify'>
-              São aceitos apenas arquivos do tipo JPG ou PNG com tamanho máximo de 20 MB.
-            </p>
+          <div className='flex flex-row items-center space-x-4 border-b border-t py-3 mb-2'>
+            <div className='flex justify-center'>
+              <img src="/avatarPerfil.svg" alt="Avatar" className='ml-2 w-24' />
+            </div>
+            <div className='flex flex-col justify-center items-center'>
+              <Button type="button" className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[80%] max-h-[15%] mb-2 flex items-center justify-center" variant="contained" color="ochre" style={{ color: 'white' }}>
+                Selecionar Foto
+              </Button>
+              <p className='flex flex-col justify-center text-txt text-[10px] w-[75%] text-justify pt-2 '>
+                São aceitos apenas arquivos do tipo JPG ou PNG com tamanho máximo de 20 MB.
+              </p>
+            </div>
           </div>
-        </div>
-        <div>
-          {userData && (
-            <UserForm
-              initialData={isEditMode ? editedUser : userData}
-              onChange={handleChange}
-              readOnly={!isEditMode}
-              onSubmit={isEditMode ? handleSaveChanges : () => { }}
-              isNewUser={false}
-              error={error}
-            />
-          )}
-        </div>
-        <div className="flex justify-around py-2">
-          {isEditMode ? (
-            <>
-              <Button onClick={handleSaveChanges} className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                variant="contained" endIcon={<SaveIcon />} color='ochre' style={{ color: 'white' }}>
-                Salvar
-              </Button>
-              <Button onClick={handleToggleEditMode} className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                variant="contained" color="ochre" style={{ color: 'white' }}>
-                Cancelar
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button onClick={handleToggleEditMode} className="py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                variant="contained" color='ochre' style={{ color: 'white' }} >
-                Editar
-              </Button>
-              <Button onClick={handleDeleteProfile} className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                variant="contained" color="error" startIcon={<DeleteIcon />}>
-                Excluir Perfil
-              </Button>
-            </>
-          )}
+          <div>
+            {userData && (
+              <UserForm
+                initialData={isEditMode ? editedUser : userData}
+                onChange={handleChange}
+                readOnly={!isEditMode}
+                onSubmit={isEditMode ? handleSaveChanges : () => { }}
+                isNewUser={false}
+                error={error}
+              />
+            )}
+          </div>
+          <div className="flex justify-around py-2">
+            {isEditMode ? (
+              <>
+                <Button onClick={handleToggleEditMode} className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  variant="contained" style={{ color: 'white', background: "red" }}>
+                  Cancelar
+                </Button>
+                <Button onClick={handleSaveChanges} className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  variant="contained" endIcon={<SaveIcon />} style={{ color: 'white', background: 'green' }}>
+                  Salvar
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={handleToggleEditMode} className="py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  variant="contained" color='ochre' style={{ color: 'white' }} >
+                  Editar
+                </Button>
+                <Button onClick={handleDeleteProfile} className="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  variant="contained" color="error" startIcon={<DeleteIcon />}>
+                  Excluir Perfil
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </main>
     </ThemeProvider>
