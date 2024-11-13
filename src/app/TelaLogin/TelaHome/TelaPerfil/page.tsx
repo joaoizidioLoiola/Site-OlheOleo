@@ -12,8 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from "@mui/icons-material/Save";
-import Button_AddFoto from '../TelaMeusVeiculos/components/Button_AddFotoCar';
-import Image from 'next/image';
+
 
 declare module '@mui/material/styles' {
   interface Palette {

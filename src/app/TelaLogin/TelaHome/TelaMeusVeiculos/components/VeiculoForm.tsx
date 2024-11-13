@@ -10,7 +10,6 @@ declare module '@mui/material/styles' {
   interface Palette {
     ochre: Palette['primary'];
   }
-
   interface PaletteOptions {
     ochre?: PaletteOptions['primary'];
   }
@@ -33,46 +32,36 @@ const theme = createTheme({
 });
 
 type VeiculoFormProps = {
-  initialData?: Veiculo | null;
+
+  veiculo?: Veiculo;
   onSubmit: (veiculoData: Veiculo) => void;
-  onDelete?: () => void;
   isEditMode?: boolean;
   editedVeiculo?: Veiculo | null;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: keyof Veiculo) => void;
   handleToggleEditMode: () => void;
   handleSaveChanges: () => void;
   handleEditVeiculo: (veiculo: Veiculo) => void;
+  deleteVeiculo: () => void;
 }
 
-// interface VeiculoFormProps {
-//   veiculo: Veiculo;
-//   isEditMode: boolean;
-//   editedVeiculo: Veiculo | null;
-//   handleSaveChanges: () => void;
-//   handleToggleEditMode: () => void;
-//   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: keyof Veiculo) => void;
-//   deleteVeiculo: () => void;
-//   handleEditVeiculo: (veiculo: Veiculo) => void;
-// };
-
-const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDelete, isEditMode, editedVeiculo, handleChange, handleToggleEditMode, handleSaveChanges, handleEditVeiculo }) => {
+const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode, editedVeiculo, handleChange, handleToggleEditMode, handleSaveChanges, handleEditVeiculo, deleteVeiculo }) => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<Veiculo>();
-  const [placa, setPLaca] = useState(initialData?.placa || '');
+  const [placa, setPLaca] = useState(veiculo?.placa || '');
   const [placaError, setPlacaError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialData) {
-      setValue('modelo', initialData.modelo);
-      setValue('quilometragem', initialData.quilometragem);
-      setValue('placa', initialData.placa);
-      setValue('tipo_oleo', initialData.tipo_oleo);
-      setValue('modelo_ultimo_oleo', initialData.modelo_ultimo_oleo);
-      setValue('filtro_oleo', initialData.filtro_oleo);
-      setValue('filtro_ar', initialData.filtro_ar);
-      setValue('filtro_combustivel', initialData.filtro_combustivel);
-      setValue('filtro_cambio', initialData.filtro_cambio);
+    if (veiculo) {
+      setValue('modelo', veiculo.modelo);
+      setValue('quilometragem', veiculo.quilometragem || '');
+      setValue('placa', veiculo.placa || '');
+      setValue('tipo_oleo', veiculo.tipo_oleo || '');
+      setValue('modelo_ultimo_oleo', veiculo.modelo_ultimo_oleo || '');
+      setValue('filtro_oleo', veiculo.filtro_oleo || '');
+      setValue('filtro_ar', veiculo.filtro_ar || '');
+      setValue('filtro_combustivel', veiculo.filtro_combustivel || '');
+      setValue('filtro_cambio', veiculo.filtro_cambio || '');
     }
-  }, [initialData, setValue]);
+  }, [veiculo, setValue]);
 
   const onFormSubmit = (data: Veiculo) => {
     onSubmit(data);
@@ -82,23 +71,13 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
     return placaPattern.test(value) ? value : value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
   };
 
-  // const handlePlacaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const formattedPlaca = formatPlaca(e.target.value);
-  //   if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(formattedPlaca) || formattedPlaca === '') {
-  //     setPlacaError(null);
-  //   } else {
-  //     setPlacaError('Placa inválida. Formato correto: ABC1D23');
-  //   }
-  //   handleChange({ ...e, target: { ...e.target, value: formattedPlaca } }, 'placa');
-  // };
-
   return (
     <ThemeProvider theme={theme}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col justify-center items-center h-full p-4 text-black">
         <div className="flex flex-col mb-2 w-full items-center">
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="modelo" className="mb-1">Modelo:</label>
-            {isEditMode && editedVeiculo?.id === initialData?.id ? (
+            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
               <input
                 {...register('modelo', { required: 'Modelo é obrigatório' })}
                 type="text"
@@ -111,7 +90,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.modelo}`}
+                value={`${veiculo?.modelo}`}
                 readOnly
               />
             )}
@@ -119,7 +98,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
           </div>
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="quilometragem" className="mb-1">Quilometragem:</label>
-            {isEditMode && editedVeiculo?.id === initialData?.id ? (
+            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
               <input
                 {...register('quilometragem', { required: 'Quilometragem é obrigatória' })}
                 type="text"
@@ -132,7 +111,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.quilometragem} km`}
+                value={`${veiculo?.quilometragem} km`}
                 readOnly
               />
             )}
@@ -140,7 +119,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
           </div>
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="placa" className="mb-1">Placa:</label>
-            {isEditMode && editedVeiculo?.id === initialData?.id ? (
+            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
               <input
                 {...register('placa', { required: 'PLaca é obrigatória' })}
                 type="text"
@@ -157,7 +136,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.placa}`}
+                value={`${veiculo?.placa}`}
                 readOnly
               />
             )}
@@ -165,7 +144,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
           </div>
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="tipo_oleo" className="mb-1">Tipo de Óleo:</label>
-            {isEditMode && editedVeiculo?.id === initialData?.id ? (
+            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
               <input
                 {...register('tipo_oleo')}
                 type="text"
@@ -179,7 +158,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.tipo_oleo}`}
+                value={`${veiculo?.tipo_oleo}`}
                 readOnly
               />
             )}
@@ -187,7 +166,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
           </div>
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="modelo_ultimo_oleo" className="mb-1">Modelo do Último Óleo:</label>
-            {isEditMode && editedVeiculo?.id === initialData?.id ? (
+            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
               <input
                 {...register('modelo_ultimo_oleo')}
                 type="text"
@@ -200,7 +179,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.modelo_ultimo_oleo}`}
+                value={`${veiculo?.modelo_ultimo_oleo}`}
                 readOnly
               />
             )}
@@ -209,7 +188,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
 
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="filtro_oleo" className="mb-1">Filtro de Óleo:</label>
-            {isEditMode && editedVeiculo?.id === initialData?.id ? (
+            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
               <input
                 type="text"
                 id="filtro_oleo"
@@ -222,7 +201,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.filtro_oleo}`}
+                value={`${veiculo?.filtro_oleo}`}
                 readOnly
               />
             )}
@@ -230,7 +209,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
           </div>
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="filtro_ar" className="mb-1">Filtro de Ar:</label>
-            {isEditMode && editedVeiculo?.id === initialData?.id ? (
+            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
               <input
                 type="text"
                 id="filtro_ar"
@@ -243,7 +222,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.filtro_ar}`}
+                value={`${veiculo?.filtro_ar}`}
                 readOnly
               />
             )}
@@ -264,7 +243,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.filtro_combustivel}`}
+                value={`${veiculo?.filtro_combustivel}`}
                 readOnly
               />
             )}
@@ -285,7 +264,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${initialData?.filtro_cambio}`}
+                value={`${veiculo?.filtro_cambio}`}
                 readOnly
               />
             )}
@@ -293,7 +272,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
           {errors.filtro_cambio && <p className="text-red-500 text-sm">{errors.filtro_cambio.message}</p>}
         </div>
         <div className="flex justify-around py-2 pl-2">
-          {isEditMode && editedVeiculo?.id === initialData?.id ? (
+          {isEditMode && editedVeiculo?.id === veiculo?.id ? (
             <div className="flex justify-around py-2 space-x-2">
               <Button onClick={handleToggleEditMode} variant="contained" style={{ color: 'white', background: 'red' }}>
                 Cancelar
@@ -305,12 +284,12 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ initialData, onSubmit, onDele
           ) : (
             <div className="flex justify-around py-2">
               <div className="mr-2">
-                <Button onClick={() => initialData && handleEditVeiculo(initialData)} variant="contained" color="ochre" style={{ color: 'white' }} >
+                <Button onClick={() => veiculo && handleEditVeiculo(veiculo)} variant="contained" color="ochre" style={{ color: 'white' }} >
                   Editar
                 </Button>
               </div>
               <div>
-                <Button onClick={onDelete} variant="contained" color="error" startIcon={<DeleteIcon />} >
+                <Button onClick={deleteVeiculo} variant="contained" color="error" startIcon={<DeleteIcon />} >
                   Excluir
                 </Button>
               </div>

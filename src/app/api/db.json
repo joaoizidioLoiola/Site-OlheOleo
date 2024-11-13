@@ -21,6 +21,19 @@
           "filtro_ar": "",
           "filtro_combustivel": "",
           "filtro_cambio": ""
+        },
+        {
+          "id": "1731537858177",
+          "modelo": "new",
+          "url_imagem": "/car.jpg",
+          "quilometragem": "45611",
+          "placa": "ASD1S33",
+          "tipo_oleo": "s",
+          "modelo_ultimo_oleo": "a",
+          "filtro_oleo": "a",
+          "filtro_ar": "a",
+          "filtro_combustivel": "",
+          "filtro_cambio": ""
         }
       ],
       "agendamentos": [
@@ -82,19 +95,32 @@
       "cpf": "115.115.115-55",
       "telefone": "(12) 95566-4444",
       "email": "neww@eemail.com",
-      "password": "12345",
+      "password": "123452",
       "confirmPassword": "12345",
       "veiculos": [
         {
-          "id": "1731511581737",
-          "modelo": "kwid",
+          "id": "1731525934597",
+          "modelo": "Kwwid Turbo",
           "url_imagem": "/car.jpg",
-          "quilometragem": "45899",
-          "placa": "ABD1D33",
-          "tipo_oleo": "SHWL12V",
-          "modelo_ultimo_oleo": "1.2",
-          "filtro_oleo": "CARBURADO",
-          "filtro_ar": "VELHO",
+          "quilometragem": "45789",
+          "placa": "ASX2S33",
+          "tipo_oleo": "NOVO",
+          "modelo_ultimo_oleo": "SSS",
+          "filtro_oleo": "SASDAS",
+          "filtro_ar": "DSADSA",
+          "filtro_combustivel": "",
+          "filtro_cambio": ""
+        },
+        {
+          "id": "1731526358512",
+          "modelo": "FORD KA",
+          "url_imagem": "/car.jpg",
+          "quilometragem": "123",
+          "placa": "ASD2D22",
+          "tipo_oleo": "OBO",
+          "modelo_ultimo_oleo": "SD",
+          "filtro_oleo": "",
+          "filtro_ar": "",
           "filtro_combustivel": "",
           "filtro_cambio": ""
         }

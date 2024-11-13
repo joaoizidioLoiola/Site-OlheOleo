@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { User } from '../../../../services/auth';
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,7 +14,7 @@ type UserFormProps = {
 
 const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNewUser, onChange, readOnly }) => {
 
-  const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm<User>();
+  const { control, register, handleSubmit, setValue, formState: { errors } } = useForm<User>();
 
   const [cpf, setCpf] = useState(initialData?.cpf || '');
   const [telefone, setTelefone] = useState(initialData?.telefone || '');
@@ -61,7 +61,6 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
 
   const formatTelefone = (value: string) => {
     let onlyNums = value.replace(/\D/g, '');
-
     onlyNums = onlyNums.slice(0, 11);
     return onlyNums
       .replace(/^(\d{2})(\d)/g, '($1) $2')
@@ -76,13 +75,22 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
     <form onSubmit={handleSubmit(onFormSubmit)} className='justify-center items-center ml-2 w-[95%]' >
       <div className="mb-4">
         <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Nome:</label>
-        <input
-          {...register('name', { required: 'Nome é obrigatório' })}
-          type="text"
-          id="name"
-          readOnly={readOnly}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        <Controller
+          name='name'
+          control={control}
+          defaultValue=''
+          rules={{ required: 'Nome é obrigatório' }}
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              id="name"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              readOnly={readOnly}
+            />
+          )}
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
       </div>
       <div className="mb-4">
         <label htmlFor="cpf" className="block text-gray-700 text-sm font-bold mb-2">CPF:</label>

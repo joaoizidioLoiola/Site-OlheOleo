@@ -127,7 +127,7 @@ export default function Main() {
                         {openMais && (
                           <div className="fixed inset-0 opacity-75 z-40" style={{ backdropFilter: 'blur(5px)', marginTop: '85px' }}></div>
                         )}
-                        
+
                         {openMais && (
                           <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-50">
                             <p
@@ -173,16 +173,17 @@ export default function Main() {
                         />
                       </div>
                       <div className="h-full overflow-hidden rounded-lg sm:w-3\4">
-                          <VeiculoForm
-                            veiculo={veiculo}
-                            isEditMode={isEditMode}
-                            editedVeiculo={editedVeiculo}
-                            handleSaveChanges={handleSaveChanges}
-                            handleToggleEditMode={handleToggleEditMode}
-                            handleChange={handleChange}
-                            deleteVeiculo={() => deleteVeiculo(veiculo.id)}
-                            handleEditVeiculo={() => handleEditVeiculo(veiculo)}
-                          />
+                        <VeiculoForm
+                          veiculo={veiculo}
+                          isEditMode={isEditMode}
+                          editedVeiculo={editedVeiculo}
+                          handleSaveChanges={handleSaveChanges}
+                          handleToggleEditMode={handleToggleEditMode}
+                          handleChange={handleChange}
+                          deleteVeiculo={() => deleteVeiculo(veiculo.id)}
+                          handleEditVeiculo={() => handleEditVeiculo(veiculo)}
+                          onSubmit={handleSaveChanges}
+                        />
                       </div>
                     </div>
                   </div>
