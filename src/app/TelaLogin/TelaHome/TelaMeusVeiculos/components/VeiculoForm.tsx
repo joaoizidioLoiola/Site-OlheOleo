@@ -72,62 +72,62 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <form className="flex flex-col justify-center items-center w-full h-full p-4 text-black">
-        <div className="flex flex-col mb-2 w-full ml-[50%] sm:ml-[50%] md:ml-[50%] xl:ml-[50%]">
-          <div className="flex flex-col mb-2">
+      <form className="flex flex-col justify-center items-center h-full p-4 text-black">
+        <div className="flex flex-col mb-2 w-full items-center">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="modelo" className="mb-1">Modelo:</label>
             {isEditMode && editedVeiculo?.id === veiculo.id ? (
               <input
                 type="text"
                 id="modelo"
                 name="modelo"
-                className="text-black border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.modelo || ''}
                 onChange={(e) => handleChange(e, "modelo")}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.modelo}`}
                 readOnly
               />
             )}
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="quilometragem" className="mb-1">Quilometragem:</label>
             {isEditMode ? (
               <input
                 type="text"
                 id="quilometragem"
                 name="quilometragem"
-                className="w-2/4 text-black border border-gray-300 rounded-md p-1"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.quilometragem || ''}
                 onChange={(e) => handleChange(e, "quilometragem")}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.quilometragem} km`}
                 readOnly
               />
             )}
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="placa" className="mb-1">Placa:</label>
             {isEditMode ? (
               <input
                 type="text"
                 id="placa"
                 name="placa"
-                className="w-2/4 text-black border border-gray-300 rounded-md p-1"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.placa || ''}
                 onChange={handlePlacaChange}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.placa}`}
                 readOnly
@@ -135,120 +135,120 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({
             )}
             {placaError && <span className="text-red-500">{placaError}</span>}
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="tipo_oleo" className="mb-1">Tipo de Óleo:</label>
             {isEditMode ? (
               <input
                 type="text"
                 id="tipo_oleo"
                 name="tipo_oleo"
-                className="w-2/4 text-black border border-gray-300 rounded-md p-1"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.tipo_oleo || ''}
                 onChange={(e) => handleChange(e, "tipo_oleo")}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.tipo_oleo}`}
                 readOnly
               />
             )}
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="modelo_ultimo_oleo" className="mb-1">Modelo do Último Óleo:</label>
             {isEditMode ? (
               <input
                 type="text"
                 id="modelo_ultimo_oleo"
                 name="modelo_ultimo_oleo"
-                className="w-2/4 text-black border border-gray-300 rounded-md p-1"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.modelo_ultimo_oleo || ''}
                 onChange={(e) => handleChange(e, "modelo_ultimo_oleo")}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.modelo_ultimo_oleo}`}
                 readOnly
               />
             )}
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="filtro_oleo" className="mb-1">Filtro de Óleo:</label>
             {isEditMode ? (
               <input
                 type="text"
                 id="filtro_oleo"
                 name="filtro_oleo"
-                className="w-2/4 text-black border border-gray-300 rounded-md p-1"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.filtro_oleo || ''}
                 onChange={(e) => handleChange(e, "filtro_oleo")}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.filtro_oleo}`}
                 readOnly
               />
             )}
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="filtro_ar" className="mb-1">Filtro de Ar:</label>
             {isEditMode ? (
               <input
                 type="text"
                 id="filtro_ar"
                 name="filtro_ar"
-                className="w-2/4 text-black border border-gray-300 rounded-md p-1"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.filtro_ar || ''}
                 onChange={(e) => handleChange(e, "filtro_ar")}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.filtro_ar}`}
                 readOnly
               />
             )}
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="filtro_combustivel" className="mb-1">Filtro de Combustível:</label>
             {isEditMode ? (
               <input
                 type="text"
                 id="filtro_combustivel"
                 name="filtro_combustivel"
-                className="w-2/4 text-black border border-gray-300 rounded-md p-1"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.filtro_combustivel || ''}
                 onChange={(e) => handleChange(e, "filtro_combustivel")}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.filtro_combustivel}`}
                 readOnly
               />
             )}
           </div>
-          <div className="flex flex-col mb-2">
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
             <label htmlFor="filtro_cambio" className="mb-1">Filtro de Câmbio:</label>
             {isEditMode ? (
               <input
                 type="text"
                 id="filtro_cambio"
                 name="filtro_cambio"
-                className="w-2/4 text-black border border-gray-300 rounded-md p-1"
+                className="text-black border border-gray-300 rounded-md p-1"
                 value={editedVeiculo?.filtro_cambio || ''}
                 onChange={(e) => handleChange(e, "filtro_cambio")}
               />
             ) : (
               <input
-                className="text-txt border border-gray-300 rounded-md p-1 w-2/4"
+                className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
                 value={`${veiculo.filtro_cambio}`}
                 readOnly
@@ -258,15 +258,13 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({
         </div>
         <div className="flex justify-around py-2 pl-2">
           {isEditMode && editedVeiculo?.id === veiculo.id ? (
-            <div className="flex justify-around py-2">
-              <Button onClick={handleSaveChanges} variant="contained" endIcon={<SaveIcon />} color='ochre' style={{ color: 'white' }} >
+            <div className="flex justify-around py-2 space-x-2">
+              <Button onClick={handleToggleEditMode} variant="contained" style={{ color: 'white', background: 'red' }}>
+                  Cancelar
+              </Button>
+              <Button onClick={handleSaveChanges} variant="contained" endIcon={<SaveIcon />} style={{ color: 'white', background: 'green' }} >
                 Salvar
               </Button>
-              <div className="ml-2">
-                <Button onClick={handleToggleEditMode} variant="contained" color="ochre" style={{ color: 'white' }}>
-                  Cancelar
-                </Button>
-              </div>
             </div>
           ) : (
             <div className="flex justify-around py-2">

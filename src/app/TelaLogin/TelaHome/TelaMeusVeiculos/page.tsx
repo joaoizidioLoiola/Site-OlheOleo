@@ -51,7 +51,7 @@ export default function Main() {
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const [openAgendarManu, setOpenAgendarManu] = useState(false);
   const [openMais, setOpenMais] = useState(false);
-  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode, createVeiculo } = useVeiculos("https://server-bancojs-ed773394a807.herokuapp.com/usuarios");
+  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode, createVeiculo } = useVeiculos("http://localhost:3000/usuarios");
 
 
 
@@ -100,7 +100,7 @@ export default function Main() {
   } else {
     return (
       <ThemeProvider theme={theme}>
-        <main className="flex flex-col w-full h-full bg-fund">
+        <main className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
           <HeaderNavigation />
           <div className="flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
             <Slider
@@ -116,9 +116,8 @@ export default function Main() {
                 veiculos.map((veiculo) => (
                   <div key={veiculo.id}>
                     {/* Dropdown */}
-                    <div className="flex justify-end items-center mr-5 mt-2">
-                      <div className="relative items-center justify-center">
-                        {/* Botão de dropdown */}
+                    <div className="fixed z-30 flex justify-start items-center mr-5 mt-2">
+                      <div className=" items-center justify-center">
                         <img
                           src="/maisIcon.svg"
                           alt="Mais"
@@ -128,9 +127,9 @@ export default function Main() {
                         {openMais && (
                           <div className="fixed inset-0 opacity-75 z-40" style={{ backdropFilter: 'blur(5px)', marginTop: '85px' }}></div>
                         )}
-                        {/* Conteúdo do dropdown */}
+                        
                         {openMais && (
-                          <div className="absolute top-20 right-0 w-56 bg-bord rounded-lg shadow-lg z-50">
+                          <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-50">
                             <p
                               className="block px-4 py-2 text-fund cursor-pointer text-center"
                               onClick={() => {
@@ -152,7 +151,7 @@ export default function Main() {
                         )}
                       </div>
                     </div>
-                    <div className="relative">
+                    <div className="">
                       <header className="flex min-w-screen justify-center items-center bg-fund ">
                         <div className="flex justify-center items-center w-screen px-5 pt-5 pb-5 text-txt font-semibold ">
                           <h1>Meus Veículos</h1>
@@ -173,8 +172,7 @@ export default function Main() {
                           }}
                         />
                       </div>
-                      <div className="w-4/5 h-full overflow-hidden rounded-lg justify-center items-center">
-                        <div>
+                      <div className="h-full overflow-hidden rounded-lg sm:w-3\4">
                           <VeiculoForm
                             veiculo={veiculo}
                             isEditMode={isEditMode}
@@ -185,7 +183,6 @@ export default function Main() {
                             deleteVeiculo={() => deleteVeiculo(veiculo.id)}
                             handleEditVeiculo={() => handleEditVeiculo(veiculo)}
                           />
-                        </div>
                       </div>
                     </div>
                   </div>
