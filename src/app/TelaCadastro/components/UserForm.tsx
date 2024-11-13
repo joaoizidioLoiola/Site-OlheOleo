@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { User } from '../../../../services/auth';
 import { v4 as uuidv4 } from "uuid";
 
@@ -12,58 +13,42 @@ type UserFormProps = {
 };
 
 const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNewUser, onChange, readOnly }) => {
-  
-  const [name, setName] = useState('');
-  const [ url_imagem, setUrlImagem ] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm<User>();
+
+  const [cpf, setCpf] = useState(initialData?.cpf || '');
+  const [telefone, setTelefone] = useState(initialData?.telefone || '');
+  const [password, setPassword] = useState(initialData?.password || '');
+  const [confirmPassword, setConfirmPassword] = useState(initialData?.confirmPassword || '');
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (initialData) {
-      setName(initialData.name);
-      setUrlImagem(initialData.url_imagem);
-      setCpf(initialData.cpf);
-      setEmail(initialData.email);
-      setTelefone(initialData.telefone);
-      setPassword(initialData.password);
-      setConfirmPassword(initialData.password);
+      setValue('name', initialData.name);
+      setValue('url_imagem', initialData.url_imagem);
+      setValue('cpf', initialData.cpf);
+      setValue('email', initialData.email);
+      setValue('telefone', initialData.telefone);
+      setValue('password', initialData.password);
+      setValue('confirmPassword', initialData.confirmPassword);
     }
-  }, [initialData]);
+  }, [initialData, setValue]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const id = uuidv4();
-    if (password !== confirmPassword) {
-      alert('As senhas não coincidem.');
+  const onFormSubmit = (data: User) => {
+    if (data.password !== data.confirmPassword) {
+      alert('As senhas não coincidem');
       return;
     }
+
     const userData: User = {
-      id,
-      name,
-      url_imagem,
-      cpf,
-      email,
-      telefone,
-      password,
+      ...data,
+      id: initialData?.id || uuidv4(),
       veiculos: initialData?.veiculos || [],
       agendamentos: initialData?.agendamentos || []
     };
 
     onSubmit(userData);
   };
-  const handleInputChange = (field: keyof User, value: string) => {
-    if (!readOnly && onChange) {
-      onChange(field, value);
-    }
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  }
 
   const formatCPF = (value: string) => {
     return value
@@ -76,34 +61,33 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
 
   const formatTelefone = (value: string) => {
     let onlyNums = value.replace(/\D/g, '');
-      
-    onlyNums = onlyNums.slice(0,11);
+
+    onlyNums = onlyNums.slice(0, 11);
     return onlyNums
       .replace(/^(\d{2})(\d)/g, '($1) $2')
       .replace(/(\d)(\d{4})$/, '$1-$2');
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className='justify-center items-center ml-2 w-[95%]' >
+    <form onSubmit={handleSubmit(onFormSubmit)} className='justify-center items-center ml-2 w-[95%]' >
       <div className="mb-4">
         <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Nome:</label>
         <input
-          name='nome'
+          {...register('name', { required: 'Nome é obrigatório' })}
           type="text"
           id="name"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            onChange && onChange('name', e.target.value);
-          }}
           readOnly={readOnly}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          required
         />
       </div>
       <div className="mb-4">
         <label htmlFor="cpf" className="block text-gray-700 text-sm font-bold mb-2">CPF:</label>
         <input
+          {...register('cpf', { required: 'CPF é obrigatório' })}
           name='cpf'
           type="text"
           id="cpf"
@@ -122,6 +106,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
       <div className="mb-4">
         <label htmlFor="telefone" className="block text-gray-700 text-sm font-bold mb-2">Celular:</label>
         <input
+          {...register('telefone')}
           name='telefone'
           type="text"
           id="telefone"
@@ -136,22 +121,18 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
           placeholder="(00) 00000-0000"
           required
         />
+        {errors.cpf && <p className="text-red-500 text-sm">{errors.cpf.message}</p>}
       </div>
       <div className="mb-4">
         <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">E-mail:</label>
         <input
-          name='email'
+          {...register('email', { required: 'E-mail é obrigadtório' })}
           type="email"
           id="email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            onChange && onChange('email', e.target.value);
-          }}
           readOnly={readOnly}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          required
         />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
       </div>
       <div className="mb-4">
         <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
@@ -159,6 +140,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
         </label>
         <div className="relative">
           <input
+            {...register('password', { required: 'Senha é obrigatória' })}
             name="password"
             type={showPassword ? 'text' : 'password'}
             id="password"
@@ -204,6 +186,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
               </svg>
             )}
           </button>
+          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
         </div>
       </div>
       <div className="mb-4">
@@ -214,6 +197,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
           Confirmar Senha:
         </label>
         <input
+          {...register('confirmPassword', { required: 'Confirmação de senha é obrigatória' })}
           name="confirmPassword"
           type="password"
           id="confirmPassword"
@@ -225,6 +209,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           required
         />
+        {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
       </div>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {isNewUser && (

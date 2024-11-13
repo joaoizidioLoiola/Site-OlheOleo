@@ -8,6 +8,7 @@ export interface User {
   email: string;
   telefone: string;
   password: string;
+  confirmPassword: string;
   veiculos?: any[];
   agendamentos?: any[];
 }

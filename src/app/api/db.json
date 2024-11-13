@@ -75,6 +75,31 @@
           "tipo_manutencao": "Filtro de Combustível, Filtro de Ar"
         }
       ]
+    },
+    {
+      "id": "846e6d82-788b-40b0-a5e2-c788229442f1",
+      "name": "neww",
+      "cpf": "115.115.115-55",
+      "telefone": "(12) 95566-4444",
+      "email": "neww@eemail.com",
+      "password": "12345",
+      "confirmPassword": "12345",
+      "veiculos": [
+        {
+          "id": "1731511581737",
+          "modelo": "kwid",
+          "url_imagem": "/car.jpg",
+          "quilometragem": "45899",
+          "placa": "ABD1D33",
+          "tipo_oleo": "SHWL12V",
+          "modelo_ultimo_oleo": "1.2",
+          "filtro_oleo": "CARBURADO",
+          "filtro_ar": "VELHO",
+          "filtro_combustivel": "",
+          "filtro_cambio": ""
+        }
+      ],
+      "agendamentos": []
     }
   ],
   "oficinas": [
