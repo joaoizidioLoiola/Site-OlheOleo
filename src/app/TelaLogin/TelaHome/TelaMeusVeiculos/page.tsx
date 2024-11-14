@@ -102,7 +102,43 @@ export default function Main() {
       <ThemeProvider theme={theme}>
         <main className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
           <HeaderNavigation />
-          <div className="flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
+          {/* Dropdown */}
+          <div className="fixed z-30 flex justify-start items-center ml-4 mt-20 bg-white/80">
+            <div className=" items-center justify-center">
+              <img
+                src="/maisIcon.svg"
+                alt="Mais"
+                className="cursor-pointer justify-center items-center"
+                onClick={openMais ? handleCloseMais : handlerOpenMais}
+              />
+              {openMais && (
+                <div className="fixed inset-0 opacity-75 z-40" style={{ backdropFilter: 'blur(5px)', marginTop: '85px' }}></div>
+              )}
+
+              {openMais && (
+                <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-50">
+                  <p
+                    className="block px-4 py-2 text-fund cursor-pointer text-center"
+                    onClick={() => {
+                      setOpenModalAddVeiculo(true);
+                      handleCloseMais();
+                    }}>
+                    Cadastrar um novo veículo
+                  </p>
+                  <p
+                    className="block px-4 py-2 text-fund cursor-pointer text-center"
+                    onClick={() => {
+                      setOpenAgendarManu(true);
+                      handleCloseMais();
+                    }}>
+                    Agendar manutenção
+                  </p>
+
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="mt-[100px] flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
             <Slider
               dots={false}
               infinite={false}
@@ -112,55 +148,21 @@ export default function Main() {
               arrows={false}
               className="w-full"
             >
+            
               {veiculos.length > 0 ? (
                 veiculos.map((veiculo) => (
                   <div key={veiculo.id}>
-                    {/* Dropdown */}
-                    <div className="fixed z-30 flex justify-start items-center mr-5 mt-2">
-                      <div className=" items-center justify-center">
-                        <img
-                          src="/maisIcon.svg"
-                          alt="Mais"
-                          className="cursor-pointer justify-center items-center"
-                          onClick={openMais ? handleCloseMais : handlerOpenMais}
-                        />
-                        {openMais && (
-                          <div className="fixed inset-0 opacity-75 z-40" style={{ backdropFilter: 'blur(5px)', marginTop: '85px' }}></div>
-                        )}
-
-                        {openMais && (
-                          <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-50">
-                            <p
-                              className="block px-4 py-2 text-fund cursor-pointer text-center"
-                              onClick={() => {
-                                setOpenModalAddVeiculo(true);
-                                handleCloseMais();
-                              }}>
-                              Cadastrar um novo veículo
-                            </p>
-                            <p
-                              className="block px-4 py-2 text-fund cursor-pointer text-center"
-                              onClick={() => {
-                                setOpenAgendarManu(true);
-                                handleCloseMais();
-                              }}>
-                              Agendar manutenção
-                            </p>
-
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="">
+                    <div>
                       <header className="flex min-w-screen justify-center items-center bg-fund ">
                         <div className="flex justify-center items-center w-screen px-5 pt-5 pb-5 text-txt font-semibold ">
                           <h1>Meus Veículos</h1>
                         </div>
                       </header>
-                      <div className="absolute w-[180px] h-[150px] bg-shad opacity-100 transform -skew-x-12 bottom-[680px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10" />
-                      <div className="inset-0 flex justify-center items-center">
+                      <div className="flex justify-center items-center relative max-h-500px">
+                        <div className='absolute w-[180px] h-[180px] bg-shad opacity-100 -skew-x-12 z-10 mt-2 ml-20'/>
+                      {/* <div className="absolute w-[180px] h-[150px] bg-shad opacity-100 transform -skew-x-12 bottom-[680px] -translate-x-1/2 -translate-y-1/2 z-10" /> */}
                         <Image
-                          className="object-contain max-w-full max-h-full z-20"
+                          className="object-contain max-w-full max-h-[150px] max-w-[240px] z-20"
                           src={veiculo.url_imagem}
                           width={250}
                           height={250}

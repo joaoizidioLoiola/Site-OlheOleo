@@ -15,7 +15,7 @@ export default function HeaderNavigation() {
   };
 
   return (
-    <header className="w-full">
+    <header className="w-full fixed z-40">
       <div className="bg-txt flex items-center justify-between p-2 border-b border-grid">
         <div className='cursor-pointer' onClick={toggleMenu} style={{ minWidth: '2.5rem' }}>
           {isOpen ? <IoCloseSharp className="text-5xl text-fund" /> : <IoReorderThree className="text-5xl text-fund" />}
