@@ -108,7 +108,7 @@ export default function AgendarManu({ onClose }: AgendarManuProps) {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="fixed inset-0 z-0 flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-y-auto">
+      <div className="fixed inset-0 z-40 sm:z-0 flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-y-auto">
         <div className="bg-white p-6 mt-10 rounded-lg shadow-lg max-w-[85%] min-h-[75%] text-black">
           <h2 className="text-xl font-semibold mb-4 text-center text-black border-b border-stone-900">
             Agendamentos

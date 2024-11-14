@@ -100,7 +100,7 @@ export default function Main() {
   } else {
     return (
       <ThemeProvider theme={theme}>
-        <main className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
+        <main id='main-content' className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
           <HeaderNavigation />
           {/* Dropdown */}
           <div className="fixed z-30 flex justify-start items-center ml-4 mt-20 bg-white/80">
@@ -111,16 +111,14 @@ export default function Main() {
                 className="cursor-pointer justify-center items-center"
                 onClick={openMais ? handleCloseMais : handlerOpenMais}
               />
-              {openMais && (
-                <div className="fixed inset-0 opacity-75 z-40" style={{ backdropFilter: 'blur(5px)', marginTop: '85px' }}></div>
-              )}
 
               {openMais && (
-                <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-50">
+                <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-20">
                   <p
                     className="block px-4 py-2 text-fund cursor-pointer text-center"
                     onClick={() => {
                       setOpenModalAddVeiculo(true);
+                      setOpenAgendarManu(false);
                       handleCloseMais();
                     }}>
                     Cadastrar um novo veículo
@@ -129,6 +127,7 @@ export default function Main() {
                     className="block px-4 py-2 text-fund cursor-pointer text-center"
                     onClick={() => {
                       setOpenAgendarManu(true);
+                      setOpenModalAddVeiculo(false);
                       handleCloseMais();
                     }}>
                     Agendar manutenção
@@ -138,63 +137,126 @@ export default function Main() {
               )}
             </div>
           </div>
-          <div className="mt-[100px] flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
-            <Slider
-              dots={false}
-              infinite={false}
-              speed={500}
-              slidesToShow={1}
-              slidesToScroll={1}
-              arrows={false}
-              className="w-full"
-            >
-            
-              {veiculos.length > 0 ? (
-                veiculos.map((veiculo) => (
-                  <div key={veiculo.id}>
-                    <div>
-                      <header className="flex min-w-screen justify-center items-center bg-fund ">
-                        <div className="flex justify-center items-center w-screen px-5 pt-5 pb-5 text-txt font-semibold ">
-                          <h1>Meus Veículos</h1>
+          {!openMais && (
+            <div className="mt-[100px] flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
+              <Slider
+                dots={false}
+                infinite={false}
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                arrows={false}
+                className="w-full"
+              >
+              
+                {veiculos.length > 0 ? (
+                  veiculos.map((veiculo) => (
+                    <div key={veiculo.id}>
+                      <div>
+                        <header className="flex min-w-screen justify-center items-center bg-fund ">
+                          <div className="flex justify-center items-center w-screen px-5 pt-5 pb-5 text-txt font-semibold ">
+                            <h1>Meus Veículos</h1>
+                          </div>
+                        </header>
+                        <div className="flex justify-center items-center relative max-h-500px">
+                          <div className='absolute w-[180px] h-[180px] bg-shad opacity-100 -skew-x-12 z-10 mt-2 ml-20'/>
+                        {/* <div className="absolute w-[180px] h-[150px] bg-shad opacity-100 transform -skew-x-12 bottom-[680px] -translate-x-1/2 -translate-y-1/2 z-10" /> */}
+                          <Image
+                            className="object-contain max-w-full max-h-[150px] max-w-[240px] z-20"
+                            src={veiculo.url_imagem}
+                            width={250}
+                            height={250}
+                            alt="Carro"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.onerror = null;
+                              target.src = "/sem_img.png";
+                            }}
+                          />
                         </div>
-                      </header>
-                      <div className="flex justify-center items-center relative max-h-500px">
-                        <div className='absolute w-[180px] h-[180px] bg-shad opacity-100 -skew-x-12 z-10 mt-2 ml-20'/>
-                      {/* <div className="absolute w-[180px] h-[150px] bg-shad opacity-100 transform -skew-x-12 bottom-[680px] -translate-x-1/2 -translate-y-1/2 z-10" /> */}
-                        <Image
-                          className="object-contain max-w-full max-h-[150px] max-w-[240px] z-20"
-                          src={veiculo.url_imagem}
-                          width={250}
-                          height={250}
-                          alt="Carro"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.onerror = null;
-                            target.src = "/sem_img.png";
-                          }}
-                        />
-                      </div>
-                      <div className="h-full overflow-hidden rounded-lg sm:w-3\4">
-                        <VeiculoForm
-                          veiculo={veiculo}
-                          isEditMode={isEditMode}
-                          editedVeiculo={editedVeiculo}
-                          handleSaveChanges={handleSaveChanges}
-                          handleToggleEditMode={handleToggleEditMode}
-                          handleChange={handleChange}
-                          deleteVeiculo={() => deleteVeiculo(veiculo.id)}
-                          handleEditVeiculo={() => handleEditVeiculo(veiculo)}
-                          onSubmit={handleSaveChanges}
-                        />
+                        <div className="h-full overflow-hidden rounded-lg sm:w-3\4">
+                          <VeiculoForm
+                            veiculo={veiculo}
+                            isEditMode={isEditMode}
+                            editedVeiculo={editedVeiculo}
+                            handleSaveChanges={handleSaveChanges}
+                            handleToggleEditMode={handleToggleEditMode}
+                            handleChange={handleChange}
+                            deleteVeiculo={() => deleteVeiculo(veiculo.id)}
+                            handleEditVeiculo={() => handleEditVeiculo(veiculo)}
+                            onSubmit={handleSaveChanges}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <SemVeiculos />
-              )}
-            </Slider>
-          </div>
+                  ))
+                ) : (
+                  <SemVeiculos />
+                )}
+              </Slider>
+            </div>
+          )}
+
+          {openMais && (
+            <div className="mt-[100px] flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8 blur-sm">
+              <Slider
+                dots={false}
+                infinite={false}
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                arrows={false}
+                className="w-full"
+              >
+              
+                {veiculos.length > 0 ? (
+                  veiculos.map((veiculo) => (
+                    <div key={veiculo.id}>
+                      <div>
+                        <header className="flex min-w-screen justify-center items-center bg-fund ">
+                          <div className="flex justify-center items-center w-screen px-5 pt-5 pb-5 text-txt font-semibold ">
+                            <h1>Meus Veículos</h1>
+                          </div>
+                        </header>
+                        <div className="flex justify-center items-center relative max-h-500px">
+                          <div className='absolute w-[180px] h-[180px] bg-shad opacity-100 -skew-x-12 z-10 mt-2 ml-20'/>
+                        {/* <div className="absolute w-[180px] h-[150px] bg-shad opacity-100 transform -skew-x-12 bottom-[680px] -translate-x-1/2 -translate-y-1/2 z-10" /> */}
+                          <Image
+                            className="object-contain max-w-full max-h-[150px] max-w-[240px] z-20"
+                            src={veiculo.url_imagem}
+                            width={250}
+                            height={250}
+                            alt="Carro"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.onerror = null;
+                              target.src = "/sem_img.png";
+                            }}
+                          />
+                        </div>
+                        <div className="h-full overflow-hidden rounded-lg sm:w-3\4">
+                          <VeiculoForm
+                            veiculo={veiculo}
+                            isEditMode={isEditMode}
+                            editedVeiculo={editedVeiculo}
+                            handleSaveChanges={handleSaveChanges}
+                            handleToggleEditMode={handleToggleEditMode}
+                            handleChange={handleChange}
+                            deleteVeiculo={() => deleteVeiculo(veiculo.id)}
+                            handleEditVeiculo={() => handleEditVeiculo(veiculo)}
+                            onSubmit={handleSaveChanges}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <SemVeiculos />
+                )}
+              </Slider>
+            </div>
+          )}
+          
           <Modal_AddVeiculos
             isOpen={openModalAddVeiculo}
             onClose={handleCloseModalAddVeiculo}
