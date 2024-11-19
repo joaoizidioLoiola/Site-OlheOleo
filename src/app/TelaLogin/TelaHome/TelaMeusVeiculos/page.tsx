@@ -73,10 +73,20 @@ export default function Main() {
   }
 
   const handlerOpenMais = () => {
-    setOpenMais(true);
+    let flag = document.getElementById('main-content');
+    if(flag != null){
+      console.log('aqui')
+      flag.style.overflow = 'hidden'
+      console.log(flag.style.overflow)
+      setOpenMais(true);
+    }
   }
 
   const handleCloseMais = () => {
+    let flag = document.getElementById('main-content');
+    if(flag != null){
+      flag.style.overflow = 'scroll-x'
+    }
     setOpenMais(false);
   }
 
@@ -100,7 +110,7 @@ export default function Main() {
   } else {
     return (
       <ThemeProvider theme={theme}>
-        <main id='main-content' className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
+        <main className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
           <HeaderNavigation />
           {/* Dropdown */}
           <div className="fixed z-30 flex justify-start items-center ml-4 mt-20 bg-white/80">
@@ -113,7 +123,7 @@ export default function Main() {
               />
 
               {openMais && (
-                <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-20">
+                <div id='main-content' className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-20">
                   <p
                     className="block px-4 py-2 text-fund cursor-pointer text-center"
                     onClick={() => {
@@ -138,7 +148,7 @@ export default function Main() {
             </div>
           </div>
           {!openMais && (
-            <div className="mt-[100px] flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
+            <div id='main-content' className="mt-[100px] flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
               <Slider
                 dots={false}
                 infinite={false}

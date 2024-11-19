@@ -44,11 +44,11 @@ export default function TelaHistoricoAgendamento() {
         return <TelaAgendamento />;
     } else {
         return (
-            <main className="bg-fund w-full h-full">
+            <main className="bg-fund w-full h-screen overflow-x-hidden">
                 {agendamentos && agendamentos.length > 0 ? (
                     <><HeaderNavigation />
-                        <div className="flex flex-col items-center mt-4 h-full">
-                            <div className='flex justify-center items-center w-full py-2 border-b border-stone-900'>
+                        <div className="flex flex-col items-center h-full">
+                            <div className='flex justify-center items-center w-full py-2 border-b border-stone-90 mt-20'>
                                 <h2 className='text-txt text-center text-2xl'>Meus Agendamentos</h2>
                             </div>
                             <ul className="w-full h-screen max-w-2xl">
