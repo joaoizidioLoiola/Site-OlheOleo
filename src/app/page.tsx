@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="flex w-screen min-h-screen flex-col bg-white items-center">
+    <main className="flex w-screen min-h-screen flex-col bg-fund items-center">
       <HeaderNavigation />
       <section className="w-full flex flex-col items-center mt-10">
         <div className="w-11/12 max-w-4xl mt-10">

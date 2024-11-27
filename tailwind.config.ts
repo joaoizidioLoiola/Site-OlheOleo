@@ -15,6 +15,7 @@ const config: Config = {
       },
       colors: {
         fund: "#F4F4F8",
+        fund_sidebar: "#F4FFFF",
         txt: "#0D1F2D",
         grid: "#E0E0E0",
         shad: "#009358",

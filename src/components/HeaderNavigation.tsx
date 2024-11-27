@@ -40,9 +40,7 @@ export default function HeaderNavigation() {
         </section>
       </div>
       {isOpen && (
-        <div className="fixed top-[60px] left-0 w-full h-full z-10 scroll">
-          <SidebarMenu />
-        </div>
+        <SidebarMenu />
       )}
     </header>
   );
