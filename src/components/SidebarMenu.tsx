@@ -14,18 +14,8 @@ export default function SidebarMenu() {
     await signOut({ redirect: false });
   };
 
-  const loadRoutes = () => {
-    const flag = document.getElementById(usePathname())
-    console.log(flag, usePathname())
-    if (flag != null) {
-      flag.style.color = 'blue'
-    }
-  }
-
-  loadRoutes()
-
   return (
-    <div className="fixed top-[64px] bottom-0 left-0 sm:max-w-sm  w-full z-10 scroll flex flex-col items-start justify-between bg-fund_sidebar text-txt overflow-x-hidden">
+    <div className="fixed top-[64px] bottom-0 left-0 sm:max-w-sm  w-full z-10 scroll flex flex-col items-start justify-between bg-fund_sidebar text-txt overflow-x-hidden sm:border-r-2 sm:border-orange-500">
       <div className='w-full'>
         {/* HOME */}
         <div className='block p-2 overflow-hidden w-full'>

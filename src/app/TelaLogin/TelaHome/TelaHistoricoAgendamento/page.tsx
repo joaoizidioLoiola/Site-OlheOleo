@@ -54,7 +54,7 @@ export default function TelaHistoricoAgendamento() {
                             <ul className="w-full h-screen max-w-2xl">
                                 {agendamentos.map((agendamento: AgendamentoResumido) => (
                                     <li key={agendamento.id_oficina} className="bg-white shadow-lg rounded-lg p-4 m-2 text-txt">
-                                        <p className="text-txt"><strong> Modelo:</strong>{agendamento.modelo_veiculo}</p>
+                                        <p className="text-txt"><strong>Modelo:</strong> {agendamento.modelo_veiculo}</p>
                                         <p className="text-txt"><strong>Oficina:</strong> {agendamento.nome_oficina}</p>
                                         <p className="text-txt"><strong>Data:</strong> {agendamento.data_agendamento}</p>
                                         <p className="text-txt"><strong>Tipo de Manutenção:</strong> {agendamento.tipo_manutencao}</p>
