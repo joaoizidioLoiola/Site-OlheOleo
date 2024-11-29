@@ -15,12 +15,12 @@ export default function SidebarMenu() {
   };
 
   return (
-    <div className="fixed top-[64px] bottom-0 left-0 sm:max-w-sm  w-full z-10 scroll flex flex-col items-start justify-between bg-fund_sidebar text-txt overflow-x-hidden sm:border-r-2 sm:border-orange-500">
+    <div className="fixed top-[64px] bottom-0 left-0 sm:max-w-sm  w-full z-10 scroll flex flex-col items-start justify-between bg-fund_sidebar text-txt overflow-x-hidden sm:border-r-4 sm:border-gray-300">
       <div className='w-full'>
         {/* HOME */}
         <div className='block p-2 overflow-hidden w-full'>
           <Link href="/">
-            <div  id='/' className="flex p-2 rounded-md items-center border-stone-900 cursor-pointer hover:bg-blue-600 hover:bg-opacity-20">
+            <div  id='/' className="flex p-2 rounded-md items-center border-stone-900 cursor-pointer hover:bg-gray-500 hover:bg-opacity-20">
               <img src="/homeIcon.svg" alt="" className="cursor-pointer mr-2" />
               <p>Home</p>
             </div>
@@ -31,7 +31,7 @@ export default function SidebarMenu() {
           /* MEUS VEICULOS */
           <div className='w-full p-2 overflow-hidden'>
             <Link href="/TelaLogin/TelaHome/TelaMeusVeiculos">
-              <div id='/TelaLogin/TelaHome/TelaMeusVeiculos' className="flex p-2 rounded-md items-center border-stone-900 cursor-pointer w-full hover:bg-blue-600 hover:bg-opacity-20">
+              <div id='/TelaLogin/TelaHome/TelaMeusVeiculos' className="flex p-2 rounded-md items-center border-stone-900 cursor-pointer w-full hover:bg-gray-500 hover:bg-opacity-20">
                 <img src="/carIcon.svg" alt="" className="cursor-pointer mr-2" />
                 <p>Meus Veículos</p>
               </div>
@@ -43,7 +43,7 @@ export default function SidebarMenu() {
           /* MEUS AGENDAMENTOS */
           <div className='w-full p-2 overflow-hidden'>
             <Link href='/TelaLogin/TelaHome/TelaHistoricoAgendamento'>
-              <div id='/TelaLogin/TelaHome/TelaHistoricoAgendamento' className="flex p-2 rounded-md items-center border-stone-900 cursor-pointer w-full hover:bg-blue-600 hover:bg-opacity-20">
+              <div id='/TelaLogin/TelaHome/TelaHistoricoAgendamento' className="flex p-2 rounded-md items-center border-stone-900 cursor-pointer w-full hover:bg-gray-500 hover:bg-opacity-20">
                 <img src="/calendarioIcon.svg" alt="" className="cursor-pointer mr-2" />
                 <p>Meus Agendamentos</p>
               </div>
@@ -55,7 +55,7 @@ export default function SidebarMenu() {
           /* PERFIL */
           <div className='w-full p-2 overflow-hidden'>
             <Link href="/TelaLogin/TelaHome/TelaPerfil">
-              <div id='/TelaLogin/TelaHome/TelaPerfil' className="flex p-2 rounded-md items-center border-stone-900 cursor-pointer w-full hover:bg-blue-600 hover:bg-opacity-20">
+              <div id='/TelaLogin/TelaHome/TelaPerfil' className="flex p-2 rounded-md items-center border-stone-900 cursor-pointer w-full hover:bg-gray-500 hover:bg-opacity-20">
                 <CgProfile className='cursor-pointer mr-2 w-[40px] h-[40px]' style={{ fontSize: '40px' }} />
                 <p>Perfil</p>
               </div>
