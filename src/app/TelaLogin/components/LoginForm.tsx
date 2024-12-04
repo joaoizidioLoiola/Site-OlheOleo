@@ -3,16 +3,17 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
+import { useLogin } from "@/app/api/api";
 
 interface FormData {
   email: string;
   password: string;
 }
 
-export default function SignIn() {
-
-  const { register, handleSubmit, setError, formState: { errors } } = useForm<FormData>();
+export default function LoginForm() {
   const router = useRouter();
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<FormData>();
+  const loginMutaion = useLogin();
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -21,6 +22,7 @@ export default function SignIn() {
         email: data.email,
         password: data.password,
       })
+      
       if ((result as { error?: string })?.error) {
         setError('email', { type: 'manual', message: 'E-mail ou senha incorretos. Por favor, tente novamente.' });
         setError('password', { type: 'manual', message: 'E-mail ou senha incorretos. Por favor, tente novamente.' });;

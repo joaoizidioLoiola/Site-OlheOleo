@@ -2,15 +2,16 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
 
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export type User = {
-  id?: string;
-  name: string;
-  cpf: string;
-  email: string;
-  telefone: string;
-  password: string;
-  veiculos?: any[];
-  agendamentos?: any[];
+  id_usuario?: string;
+  cpf_usuario: string;
+  nome_usuario: string;
+  email_usuario: string;
+  telefone_usuario: string;
+  senha_usuario: string;
 }
 
 export type Agendamento = {
@@ -30,6 +31,7 @@ export interface LoginResponse {
     email: string;
     password: string;
   };
+  message?: string;
 }
 
 export interface RegisterResponse {
@@ -55,7 +57,7 @@ const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
 
-        const url = 'http://localhost:3000/usuarios';
+        const url = `${API_URL}users`;
         try {
           const response = await axios.get(url, {
             params: {
@@ -65,7 +67,7 @@ const authOptions = {
           });
 
           const users = response.data;
-          const user = users.find((user: User) => user.email === email && user.password === password);
+          const user = users.find((user: User) => user.email_usuario === email && user.senha_usuario === password);
 
           if (user) {
             return user;
@@ -114,12 +116,12 @@ const authOptions = {
 export default NextAuth(authOptions);
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'http://localhost:3000/usuarios';
+  const url = `${API_URL}users`;
 
   try {
     const cpfExistsResponse = await axios.get(url, {
       params: {
-        cpf: userData.cpf,
+        cpf: userData.cpf_usuario,
       },
     });
     const cpfExists = cpfExistsResponse.data.length > 0;
@@ -130,7 +132,7 @@ export const register = async (userData: User): Promise<RegisterResponse> => {
 
     const emailExistsResponse = await axios.get(url, {
       params: {
-        email: userData.email,
+        email: userData.email_usuario,
       },
     });
     const emailExists = emailExistsResponse.data.length > 0;
@@ -141,7 +143,7 @@ export const register = async (userData: User): Promise<RegisterResponse> => {
 
     const telefoneExistsResponse = await axios.get(url, {
       params: {
-        telefone: userData.telefone,
+        telefone: userData.telefone_usuario,
       },
     });
     const telefoneExists = telefoneExistsResponse.data.length > 0;
