@@ -6,7 +6,7 @@ import axios from 'axios';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export type User = {
-  id_usuario?: string;
+  id_usuario?: number;
   cpf_usuario: string;
   nome_usuario: string;
   email_usuario: string;
@@ -44,7 +44,6 @@ export interface RegisterResponse {
 }
 
 const authOptions = {
-
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -61,16 +60,23 @@ const authOptions = {
         try {
           const response = await axios.get(url, {
             params: {
-              email,
-              password,
+              email_usuario: email,
+              senha_usuario: password,
             }
           });
 
           const users = response.data;
-          const user = users.find((user: User) => user.email_usuario === email && user.senha_usuario === password);
+          const user = users.find((user: any) => 
+            user.email_usuario === email && 
+            user.senha_usuario === password);
 
           if (user) {
-            return user;
+            return {
+              id: user.id_usuario,
+              email: user.email_usuario,
+              name: user.nome_usuario,
+              // image: user.url_mage || null,
+            };
           } else {
             return null;
           }
@@ -81,35 +87,32 @@ const authOptions = {
       },
     })
   ],
-  trustHosrt: true,
-  trustHostedDomain: true,
-
+  callbacks: {
+    async jwt({ token, user }: { token: any, user?: any }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.image = user.image;
+      }
+      return token;
+    },
+    async session({ session, token }: { session: any, token: any }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.name = token.name;
+        session.user.image = token.image;
+      }
+      return session;
+    }
+  },
   pages: {
     signIn: "/TelaLogin",
     signOut: "/",
     error: "/TelaLogin",
     verifyRequest: "/TelaLogin",
     newUser: "/TelaLogin",
-  },
-  callbacks: {
-    async session({ session, token }: { session: any, token: any }) {
-      if (token) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.nome = token.nome;
-        console.log('Session:', session);
-      }
-      return session;
-    },
-    async jwt({ token, user }: { token: any, user: any }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.nome = user.nome;
-        console.log('JWT token:', token);
-      }
-      return token;
-    },
   }
 };
 

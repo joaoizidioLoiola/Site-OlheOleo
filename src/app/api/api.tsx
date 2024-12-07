@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { useSession } from 'next-auth/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface User {
-  id_usuario?: string;
+  id_usuario?: number;
   cpf_usuario: string;
   nome_usuario: string;
   email_usuario: string;
@@ -14,15 +15,15 @@ export interface User {
 }
 
 export interface Veiculo {
-  veiculo_id: string;
+  veiculo_id?: number;
   veiculo_marca: string;
   veiculo_modelo: string;
   veiculo_cor: string;
   veiculo_placa: string;
   veiculo_motor: string;
   veiculo_km: number;
-  id_usuario: string;
-  usuario: User;
+  id_usuario: number;
+  usuario?: User;
 }
 
 export interface RegisterUserData {
@@ -33,6 +34,8 @@ export interface RegisterUserData {
   telefone_usuario: string;
   senha_usuario: string;
 }
+
+
 
 const api = axios.create({
   baseURL: API_URL,
@@ -65,8 +68,20 @@ const apiCalls = {
   },
 
   updateUser: async (user: User): Promise<User> => {
-    const { data } = await api.put(`/users/${user.id_usuario}`, user);
-    return data;
+    if (!user.id_usuario) {
+      throw new Error('ID do usuário é obrigatório');
+    }
+  
+    // Remove o id_usuario do payload mas mantém na URL
+    const { id_usuario, ...payload } = user;
+    
+    try {
+      const { data } = await api.patch(`/users/${id_usuario}`, payload);
+      return data;
+    } catch (error) {
+      console.error('Erro na atualização:', error);
+      throw error;
+    }
   },
 
   deleteUser: async (id: string): Promise<void> => {
@@ -74,7 +89,7 @@ const apiCalls = {
   },
 
   // Veículos
-  getVeiculos: async (): Promise<Veiculo[]> => {
+  getAllVeiculos: async (): Promise<Veiculo[]> => {
     const { data } = await api.get('/veiculos');
     return data;
   },
@@ -84,18 +99,58 @@ const apiCalls = {
     return data;
   },
 
-  createVeiculo: async (veiculo: Omit<Veiculo, 'id'>): Promise<Veiculo> => {
-    const { data } = await api.post('/veiculos', veiculo);
+  createVeiculo: async (veiculo: Omit<Veiculo, 'veiculo_id'>): Promise<Veiculo> => {
+    const payload = {
+      veiculo_marca: veiculo.veiculo_marca,
+      veiculo_modelo: veiculo.veiculo_modelo,
+      veiculo_cor: veiculo.veiculo_cor,
+      veiculo_placa: veiculo.veiculo_placa,
+      veiculo_motor: veiculo.veiculo_motor,
+      veiculo_km: Number(veiculo.veiculo_km),
+      id_usuario: veiculo.id_usuario
+    };
+
+    const { data } = await api.post('/veiculos', payload, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
     return data;
   },
 
   updateVeiculo: async (veiculo: Veiculo): Promise<Veiculo> => {
-    const { data } = await api.put(`/veiculos/${veiculo.veiculo_id}`, veiculo);
-    return data;
+    if (!veiculo.veiculo_id) {
+      throw new Error('ID do veículo é obrigatório');
+    }
+  
+    // Remove campos desnecessários e formata o payload
+    const payload = {
+      veiculo_marca: veiculo.veiculo_marca,
+      veiculo_modelo: veiculo.veiculo_modelo,
+      veiculo_cor: veiculo.veiculo_cor,
+      veiculo_placa: veiculo.veiculo_placa,
+      veiculo_motor: veiculo.veiculo_motor,
+      veiculo_km: Number(veiculo.veiculo_km),
+      id_usuario: veiculo.id_usuario
+    };
+  
+    try {
+      const { data } = await api.patch(`/veiculos/${veiculo.veiculo_id}`, payload);
+      return data;
+    } catch (error) {
+      console.error('Erro na atualização:', error);
+      throw error;
+    }
   },
 
   deleteVeiculo: async (id: string): Promise<void> => {
-    await api.delete(`/veiculos/${id}`);
+    try {
+      await api.delete(`/veiculos/${id}`);
+    } catch (error) {
+      console.error('Erro ao deletar veículo:', error);
+      throw error;
+    }
   },
 };
 
@@ -159,7 +214,6 @@ export const useRegister = () => {
   );
 };
 
-
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
   
@@ -171,27 +225,39 @@ export const useUpdateUser = () => {
   });
 };
 
-
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
   
-  return useMutation(apiCalls.deleteUser, {
+  return useMutation(async (id: string) => {
+    // Deletar veículos do usuário
+    const veiculos = await apiCalls.getAllVeiculos();
+    const userVeiculos = veiculos.filter(veiculo => veiculo.id_usuario === Number(id));
+    await Promise.all(userVeiculos.map(veiculo => apiCalls.deleteVeiculo(veiculo.veiculo_id!.toString())));
+
+    // Deletar usuário
+    await apiCalls.deleteUser(id);
+  }, {
     onSuccess: () => {
       queryClient.invalidateQueries(queryKeys.users);
     },
   });
 };
 
-export const useVeiculos = () => {
-  return useQuery(queryKeys.veiculos, apiCalls.getVeiculos, {
-    staleTime: 1000 * 60 * 5,
-  });
-};
+/*
+Use Veiculos
+*/ 
 
-export const useVeiculo = (id: string) => {
-  return useQuery(['veiculo', id], () => apiCalls.getVeiculoById(id), {
-    enabled: !!id,
-  });
+export const useVeiculos = (userId?: string) => {
+  return useQuery(
+    ['veiculos', userId],
+    async () => {
+      const { data } = await api.get('/veiculos');
+      return data.filter((veiculo: Veiculo) => veiculo.id_usuario === Number(userId));
+    },
+    {
+      enabled: !!userId,
+    }
+  );
 };
 
 export const useCreateVeiculo = () => {
@@ -200,7 +266,7 @@ export const useCreateVeiculo = () => {
   return useMutation(apiCalls.createVeiculo, {
     onSuccess: (newVeiculo) => {
       queryClient.invalidateQueries(queryKeys.veiculos);
-      queryClient.invalidateQueries(queryKeys.userVeiculos(newVeiculo.id_usuario));
+      queryClient.invalidateQueries(queryKeys.userVeiculos(newVeiculo.id_usuario.toString()));
     },
   });
 };
@@ -212,7 +278,7 @@ export const useUpdateVeiculo = () => {
     onSuccess: (updatedVeiculo) => {
       queryClient.invalidateQueries(queryKeys.veiculos);
       queryClient.invalidateQueries(['veiculo', updatedVeiculo.veiculo_id]);
-      queryClient.invalidateQueries(queryKeys.userVeiculos(updatedVeiculo.id_usuario));
+      queryClient.invalidateQueries(queryKeys.userVeiculos(updatedVeiculo.id_usuario.toString()));
     },
   });
 };

@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { User } from '@/app/api/api';
-import { v4 as uuidv4 } from "uuid";
 
 type UserFormProps = {
   error: string | null;
   initialData?: User | null;
-  onSubmit: (userData: User) => void;
+  onSubmit: (userData: Omit<User, 'id_usuario'>) => void;
   isNewUser?: boolean;
   onChange?: (field: keyof User, value: string) => void;
   readOnly?: boolean;
 };
 
 const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNewUser, onChange, readOnly }) => {
-  const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm<User>({
+  const { control, handleSubmit, formState: { errors } } = useForm<User>({
     defaultValues: {
       nome_usuario: initialData?.nome_usuario || '',
       cpf_usuario: initialData?.cpf_usuario || '',
       email_usuario: initialData?.email_usuario || '',
       telefone_usuario: initialData?.telefone_usuario || '',
       senha_usuario: initialData?.senha_usuario || '',
+      tipo_usuario: initialData?.tipo_usuario || 1,
     }
   });
 
@@ -43,9 +43,13 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
   };
 
   const onFormSubmit = (data: User) => {
-    const userData: User = {
-      ...data,
-      id_usuario: initialData?.id_usuario || uuidv4(),
+    const userData: Omit<User, 'id_usuario'> = {
+      cpf_usuario: data.cpf_usuario,
+      nome_usuario: data.nome_usuario,
+      email_usuario: data.email_usuario,
+      telefone_usuario: data.telefone_usuario,
+      senha_usuario: data.senha_usuario,
+      tipo_usuario: data.tipo_usuario,
     };
 
     onSubmit(userData);
@@ -67,6 +71,10 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
               type="text"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               readOnly={readOnly}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) onChange('nome_usuario', e.target.value);
+              }}
             />
           )}
         />
@@ -90,7 +98,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
               onChange={(e) => {
                 const formatted = formatCPF(e.target.value);
                 onChange(formatted);
-                if (onChange) onChange(formatted.replace(/\D/g, ''));
+                
               }}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="000.000.000-00"
@@ -118,7 +126,6 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
               onChange={(e) => {
                 const formatted = formatTelefone(e.target.value);
                 onChange(formatted);
-                if (onChange) onChange(formatted.replace(/\D/g, ''));
               }}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="(00) 00000-0000"
@@ -151,6 +158,10 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
               type="email"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               readOnly={readOnly}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) onChange('email_usuario', e.target.value);
+              }}
             />
           )}
         />
@@ -174,6 +185,10 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
                 type={showPassword ? 'text' : 'password'}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 readOnly={readOnly}
+                onChange={(e) => {
+                  field.onChange(e);
+                  if (onChange) onChange('senha_usuario', e.target.value);
+                }}
               />
             )}
           />

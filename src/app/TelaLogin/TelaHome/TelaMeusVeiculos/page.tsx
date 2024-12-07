@@ -1,38 +1,16 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
-'use client'
+"use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
-
-import Modal_AddVeiculos from "./components/modalAddVeiculos";
+import { useQueryClient } from "react-query";
+import { useVeiculos, useCreateVeiculo, useUpdateVeiculo, useDeleteVeiculo } from "@/app/api/api";
+import { Veiculo } from "@/app/api/api";
+import Slider from "react-slick";
 import HeaderNavigation from "../../../../components/HeaderNavigation";
+import Modal_AddVeiculos from "./components/modalAddVeiculos";
 import AgendarManu from '../TelaAgendamento/components/AgendarManu';
 import SemVeiculos from "./components/SemVeiculos";
 import VeiculoForm from "./components/VeiculoForm";
-import useVeiculos, { Veiculo } from "@/hooks/useVeiculos";
-
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-declare module '@mui/material/styles' {
-  interface Palette {
-    ochre: Palette['primary'];
-  }
-
-  interface PaletteOptions {
-    ochre?: PaletteOptions['primary'];
-  }
-}
-declare module '@mui/material/Button' {
-  interface ButtonPropsColorOverrides {
-    ochre: true;
-  }
-}
 
 const theme = createTheme({
   palette: {
@@ -45,162 +23,213 @@ const theme = createTheme({
   },
 });
 
-
-export default function Main() {
+export default function MeusVeiculos() {
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedVeiculo, setEditedVeiculo] = useState<Veiculo | null>(null);
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
   const [openAgendarManu, setOpenAgendarManu] = useState(false);
   const [openMais, setOpenMais] = useState(false);
-  const { veiculos, deleteVeiculo, handleEditVeiculo, handleSaveChanges, handleToggleEditMode, handleChange, getVeiculos, editedVeiculo, isEditMode, createVeiculo } = useVeiculos("http://localhost:3000/usuarios");
 
+  // Queries e Mutations
+  const { data: veiculos = [], isLoading, refetch } = useVeiculos(session?.user?.id);
+  const createVeiculoMutation = useCreateVeiculo();
 
+  // Handlers
+  const handleCloseModalAddVeiculo = () => setOpenModalAddVeiculo(false);
+  const handleCloseAgendarManu = () => setOpenAgendarManu(false);
+  const handlerOpenAgendarManu = () => setOpenAgendarManu(true);
+  const handlerOpenMais = () => setOpenMais(true);
+  const handleCloseMais = () => setOpenMais(false);
+
+  const handleEditVeiculo = (veiculo: Veiculo) => {
+    setEditedVeiculo(veiculo);
+    setIsEditMode(true);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: keyof Veiculo) => {
+    if (editedVeiculo) {
+      setEditedVeiculo({
+        ...editedVeiculo,
+        [field]: e.target.value
+      });
+    }
+  };
+
+  const handleToggleEditMode = () => setIsEditMode(!isEditMode);
+  const updateVeiculoMutation = useUpdateVeiculo();
+
+  const handleSaveChanges = async () => {
+    if (!editedVeiculo || !editedVeiculo.veiculo_id) return;
+      
+    try {
+      // Cria o payload correto removendo campos desnecessários
+      const payload = {
+        veiculo_marca: editedVeiculo.veiculo_marca,
+        veiculo_modelo: editedVeiculo.veiculo_modelo,
+        veiculo_cor: editedVeiculo.veiculo_cor,
+        veiculo_placa: editedVeiculo.veiculo_placa,
+        veiculo_motor: editedVeiculo.veiculo_motor,
+        veiculo_km: Number(editedVeiculo.veiculo_km), // Converte para número
+        id_usuario: editedVeiculo.id_usuario
+      };
+  
+      await updateVeiculoMutation.mutateAsync({
+        ...payload,
+        veiculo_id: editedVeiculo.veiculo_id
+      });
+        
+      setIsEditMode(false);
+      setEditedVeiculo(null);
+      alert('Veículo atualizado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao atualizar veículo:', error);
+    }
+  };
+
+  const deleteVeiculoMutation = useDeleteVeiculo();
+  
+  const handleDeleteVeiculo = async (veiculoId: number) => {
+    try {
+      await deleteVeiculoMutation.mutateAsync(veiculoId.toString());
+      alert('Veículo excluído com sucesso!');
+      refetch(); // Atualiza a lista após deletar
+    } catch (error) {
+      console.error('Erro ao excluir veículo:', error);
+      alert('Erro ao excluir veículo');
+    }
+  };
 
   useEffect(() => {
-    if (session?.user?.email) {
-      getVeiculos(session.user.email);
+    if (createVeiculoMutation.isSuccess) {
+      refetch();
     }
-  }, [session]);
+  }, [createVeiculoMutation.isSuccess, refetch]);
 
-  const handleCloseModalAddVeiculo = () => {
-    setOpenModalAddVeiculo(false);
+  if (isLoading || !session?.user?.email) {
+    return <p>Carregando...</p>;
   }
 
-  const handlerOpenAgendarManu = () => {
-    setOpenAgendarManu(true);
-  }
-  const handleCloseAgendarManu = () => {
-    setOpenAgendarManu(false);
-  }
-
-  const handlerOpenMais = () => {
-    setOpenMais(true);
-  }
-
-  const handleCloseMais = () => {
-    setOpenMais(false);
-  }
-
-  const handleAddVeiculo = async (email: string, newVeiculo: Veiculo) => {
-    try {
-      await createVeiculo(email, newVeiculo);
-      await getVeiculos(email);
-      setOpenModalAddVeiculo(false);
-    } catch (error) {
-      console.log('Erro ao adicionar veículo', error);
-    }
-  }
-
-
-  if (!session?.user?.email) {
-    return <p>Carregando...</p>
-  }
-
-  if (veiculos.length === 0) {
-    return <SemVeiculos />;
-  } else {
+  if (!veiculos || veiculos.length === 0) {
     return (
-      <ThemeProvider theme={theme}>
-        <main className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
-          <HeaderNavigation />
-          <div className="flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
-            <Slider
-              dots={false}
-              infinite={false}
-              speed={500}
-              slidesToShow={1}
-              slidesToScroll={1}
-              arrows={false}
-              className="w-full"
-            >
-              {veiculos.length > 0 ? (
-                veiculos.map((veiculo) => (
-                  <div key={veiculo.id}>
-                    {/* Dropdown */}
-                    <div className="fixed z-30 flex justify-start items-center mr-5 mt-2">
-                      <div className=" items-center justify-center">
-                        <img
-                          src="/maisIcon.svg"
-                          alt="Mais"
-                          className="cursor-pointer justify-center items-center"
-                          onClick={openMais ? handleCloseMais : handlerOpenMais}
-                        />
-                        {openMais && (
-                          <div className="fixed inset-0 opacity-75 z-40" style={{ backdropFilter: 'blur(5px)', marginTop: '85px' }}></div>
-                        )}
-
-                        {openMais && (
-                          <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-50">
-                            <p
-                              className="block px-4 py-2 text-fund cursor-pointer text-center"
-                              onClick={() => {
-                                setOpenModalAddVeiculo(true);
-                                handleCloseMais();
-                              }}>
-                              Cadastrar um novo veículo
-                            </p>
-                            <p
-                              className="block px-4 py-2 text-fund cursor-pointer text-center"
-                              onClick={() => {
-                                setOpenAgendarManu(true);
-                                handleCloseMais();
-                              }}>
-                              Agendar manutenção
-                            </p>
-
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="">
-                      <header className="flex min-w-screen justify-center items-center bg-fund ">
-                        <div className="flex justify-center items-center w-screen px-5 pt-5 pb-5 text-txt font-semibold ">
-                          <h1>Meus Veículos</h1>
-                        </div>
-                      </header>
-                      <div className="absolute w-[180px] h-[150px] bg-shad opacity-100 transform -skew-x-12 bottom-[680px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10" />
-                      <div className="inset-0 flex justify-center items-center">
-                        <Image
-                          className="object-contain max-w-full max-h-full z-20"
-                          src={veiculo.url_imagem}
-                          width={250}
-                          height={250}
-                          alt="Carro"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.onerror = null;
-                            target.src = "/sem_img.png";
-                          }}
-                        />
-                      </div>
-                      <div className="h-full overflow-hidden rounded-lg sm:w-3\4">
-                        <VeiculoForm
-                          veiculo={veiculo}
-                          isEditMode={isEditMode}
-                          editedVeiculo={editedVeiculo}
-                          handleSaveChanges={handleSaveChanges}
-                          handleToggleEditMode={handleToggleEditMode}
-                          handleChange={handleChange}
-                          deleteVeiculo={() => deleteVeiculo(veiculo.id)}
-                          handleEditVeiculo={() => handleEditVeiculo(veiculo)}
-                          onSubmit={handleSaveChanges}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <SemVeiculos />
-              )}
-            </Slider>
-          </div>
-          <Modal_AddVeiculos
-            isOpen={openModalAddVeiculo}
-            onClose={handleCloseModalAddVeiculo}
-            onAdd={handleAddVeiculo}
-          />
-          {openAgendarManu && <AgendarManu onClose={handleCloseAgendarManu} />}
-        </main >
-      </ThemeProvider>
+      <SemVeiculos
+        onAddVeiculo={async (newVeiculo) => {
+          if (!session?.user?.id) return;
+          
+          try {
+            await createVeiculoMutation.mutateAsync({
+              ...newVeiculo,
+              id_usuario: Number(session.user.id) // Converter id_usuario para número
+            });
+            setOpenModalAddVeiculo(false);
+            refetch();
+          } catch (error) {
+            console.error('Erro ao adicionar veículo:', error);
+          }
+        }}
+      />
     );
   }
+
+  return (
+    <ThemeProvider theme={theme}>
+      <main className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
+        <HeaderNavigation />
+        <div className="flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
+          <Slider
+            dots={false}
+            infinite={false}
+            speed={500}
+            slidesToShow={1}
+            slidesToScroll={1}
+            arrows={false}
+            className="w-full"
+          >
+            {veiculos.map((veiculo: Veiculo) => (
+              <div key={veiculo.veiculo_id}>
+                {/* Dropdown */}
+                <div className="fixed z-30 flex justify-start items-center mr-5 mt-2">
+                  <div className="items-center justify-center">
+                    <img
+                      src="/maisIcon.svg"
+                      alt="Mais"
+                      className="cursor-pointer justify-center items-center"
+                      onClick={openMais ? handleCloseMais : handlerOpenMais}
+                    />
+                    {openMais && (
+                      <>
+                        <div 
+                          className="fixed inset-0 opacity-75 z-40" 
+                          style={{ backdropFilter: 'blur(5px)', marginTop: '85px' }}
+                        />
+                        <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-50">
+                          <p
+                            className="block px-4 py-2 text-fund cursor-pointer text-center"
+                            onClick={() => {
+                              setOpenModalAddVeiculo(true);
+                              handleCloseMais();
+                            }}
+                          >
+                            Cadastrar um novo veículo
+                          </p>
+                          <p
+                            className="block px-4 py-2 text-fund cursor-pointer text-center"
+                            onClick={() => {
+                              setOpenAgendarManu(true);
+                              handleCloseMais();
+                            }}
+                          >
+                            Agendar manutenção
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="h-full overflow-hidden rounded-lg sm:w-3/4">
+                  <VeiculoForm
+                    veiculo={veiculo}
+                    isEditMode={isEditMode}
+                    editedVeiculo={editedVeiculo}
+                    handleSaveChanges={handleSaveChanges}
+                    handleToggleEditMode={handleToggleEditMode}
+                    handleDeleteVeiculo={handleDeleteVeiculo}
+                    handleChange={handleChange}
+                    deleteVeiculo={() => {
+                      queryClient.invalidateQueries(['veiculos', session?.user?.id]);
+                    }}
+                    handleEditVeiculo={() => handleEditVeiculo(veiculo)}
+                    onSubmit={handleSaveChanges}
+                  />
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </div>
+        
+        <Modal_AddVeiculos
+          isOpen={openModalAddVeiculo}
+          onClose={handleCloseModalAddVeiculo}
+          onAdd={async (newVeiculo) => {
+            if (!session?.user?.id) return;
+            
+            try {
+              await createVeiculoMutation.mutateAsync({
+                ...newVeiculo,
+                id_usuario: Number(session.user.id) // Converter id_usuario para número
+              });
+              setOpenModalAddVeiculo(false);
+              refetch();
+            } catch (error) {
+              console.error('Erro ao adicionar veículo:', error);
+            }
+          }}
+        />
+        
+        {openAgendarManu && <AgendarManu onClose={handleCloseAgendarManu} />}
+      </main>
+    </ThemeProvider>
+  );
 }

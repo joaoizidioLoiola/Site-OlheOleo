@@ -1,30 +1,20 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { Veiculo } from '@/app/api/api';
+
 import { useSession } from 'next-auth/react';
-import useVeiculos, { Veiculo } from '@/hooks/useVeiculos';
+import useVeiculos from '@/hooks/useVeiculos';
 import Button_AddFotoCar from '../components/Button_AddFotoCar';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
 
-interface VeiculoForm {
-  modelo: string;
-  imagem: string;
-  placa: string;
-  quilometragem: string;
-  tipo_oleo: string;
-  modelo_ultimo_oleo: string;
-  filtro_oleo: string;
-  filtro_ar: string;
-  filtro_combustivel: string;
-  filtro_cambio: string;
-}
-
 interface Modal_AddVeiculosProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (email: string, veiculo: Veiculo) => void;
+  onAdd: (newVeiculo: Omit<Veiculo, 'veiculo_id'>) => Promise<void>;
 }
 
 export default function Modal_AddVeiculos({
@@ -46,7 +36,7 @@ export default function Modal_AddVeiculos({
   };
 
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<VeiculoForm>();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<Omit<Veiculo, 'veiculo_id'>>();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -54,33 +44,39 @@ export default function Modal_AddVeiculos({
     }
   }, [selectedImage]);
 
-  const onSubmit: SubmitHandler<VeiculoForm> = async (data) => {
+  const onSubmit = async (data: Omit<Veiculo, 'veiculo_id'>) => {
+    try {
+      await onAdd({
+        ...data,
+        veiculo_km: Number(data.veiculo_km),
+      });
+      onClose();
+    } catch (error) {
+    console.error('Erro ao adicionar veículo:', error);
+  };
+
     if (!session?.user?.email || !session?.user) {
       console.log('Dados nao encontrados na sessão');
       return;
     }
 
-    if (!formatPlaca(data.placa)) {
+    if (!formatPlaca(data.veiculo_placa)) {
       alert('A placa deve estar no formato MERCOSUL: ABC1D23');
       return;
     }
 
     try {
       const newVeiculo: Veiculo = {
-        id: Date.now().toString(),
-        modelo: data.modelo,
-        url_imagem: selectedImage,
-        quilometragem: data.quilometragem,
-        placa: data.placa,
-        tipo_oleo: data.tipo_oleo,
-        modelo_ultimo_oleo: data.modelo_ultimo_oleo,
-        filtro_oleo: data.filtro_oleo,
-        filtro_ar: data.filtro_ar,
-        filtro_combustivel: data.filtro_combustivel,
-        filtro_cambio: data.filtro_cambio,
+        veiculo_modelo: data.veiculo_modelo,
+        veiculo_km: data.veiculo_km,
+        veiculo_placa: data.veiculo_placa,
+        veiculo_marca: data.veiculo_marca, 
+        veiculo_cor: data.veiculo_cor, 
+        veiculo_motor: data.veiculo_motor , 
+        id_usuario: parseInt(session.user.id || '0'), 
       };
 
-      await onAdd(session.user.email, newVeiculo);
+      await onAdd(newVeiculo);
       onClose();
       reset();
       setSelectedImage('/car.jpg');
@@ -126,60 +122,42 @@ export default function Modal_AddVeiculos({
                   />
 
                   <Button_AddFotoCar selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                 
                   <input
                     type="text"
-                    placeholder="Modelo"
-                    {...register('modelo', { required: true })}
-                    className={`mt-3 p-2 w-full border ${errors.modelo ? 'border-bord' : 'border-gray-300'} rounded-md text-black`}
+                    placeholder="Modelo do Veículo"
+                    {...register('veiculo_modelo', { required: true })}
+                    className={`mt-3 p-2 w-full border ${errors.veiculo_modelo ? 'border-bord' : 'border-gray-300'} rounded-md text-black`}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Marca do Veículo"
+                    {...register('veiculo_marca', { required: true })}
+                    className={`mt-3 p-2 w-full border ${errors.veiculo_marca ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Cor"
+                    {...register('veiculo_cor', { required: true })}
+                    className={`mt-3 p-2 w-full border ${errors.veiculo_cor ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
                   />
                   <input
                     type="text"
                     placeholder="Placa"
-                    {...register('placa', { required: true })}
-                    className={`mt-3 p-2 w-full border ${errors.placa ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
+                    {...register('veiculo_placa', { required: true })}
+                    className={`mt-3 p-2 w-full border ${errors.veiculo_placa ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Modelo do Motor do Veículo"
+                    {...register('veiculo_motor', { required: false })}
+                    className={`mt-3 p-2 w-full border ${errors.veiculo_motor ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
                   />
                   <input
                     type="number"
                     placeholder="Quilometragem"
-                    {...register('quilometragem', { required: true })}
-                    className={`mt-3 p-2 w-full border ${errors.quilometragem ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
-                  />
-
-                  <input
-                    type="text"
-                    placeholder="Tipo de Óleo"
-                    {...register('tipo_oleo', { required: true })}
-                    className={`mt-3 p-2 w-full border ${errors.tipo_oleo ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
-                  />
-                   <input
-                    type="text"
-                    placeholder="Modelo do Último Óleo"
-                    {...register('modelo_ultimo_oleo', { required: true })}
-                    className={`mt-3 p-2 w-full border ${errors.modelo_ultimo_oleo ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Filtro de Óleo"
-                    {...register('filtro_oleo', { required: false })}
-                    className={`mt-3 p-2 w-full border ${errors.filtro_oleo ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Filtro de Ar"
-                    {...register('filtro_ar', { required: false })}
-                    className={`mt-3 p-2 w-full border ${errors.filtro_ar ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Filtro de Combustível"
-                    {...register('filtro_combustivel', { required: false })}
-                    className={`mt-3 p-2 w-full border ${errors.filtro_combustivel ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Filtro de Câmbio"
-                    {...register('filtro_cambio', { required: false })}
-                    className={`mt-3 p-2 w-full border ${errors.filtro_cambio ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
+                    {...register('veiculo_km', { required: true })}
+                    className={`mt-3 p-2 w-full border ${errors.veiculo_km ? 'border-red-500' : 'border-gray-300'} rounded-md text-black`}
                   />
                   <button
                     type="submit"

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
-import { Veiculo } from '../../../../../hooks/useVeiculos';
+import { Veiculo } from '@/app/api/api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from "@mui/icons-material/Save";
 import Button from '@mui/material/Button';
@@ -32,7 +32,6 @@ const theme = createTheme({
 });
 
 type VeiculoFormProps = {
-
   veiculo?: Veiculo;
   onSubmit: (veiculoData: Veiculo) => void;
   isEditMode?: boolean;
@@ -42,24 +41,22 @@ type VeiculoFormProps = {
   handleSaveChanges: () => void;
   handleEditVeiculo: (veiculo: Veiculo) => void;
   deleteVeiculo: () => void;
+  handleDeleteVeiculo: (veiculoId: number) => Promise<void>;
 }
 
-const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode, editedVeiculo, handleChange, handleToggleEditMode, handleSaveChanges, handleEditVeiculo, deleteVeiculo }) => {
+const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode, editedVeiculo, handleChange, handleToggleEditMode, handleSaveChanges, handleEditVeiculo, handleDeleteVeiculo }) => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<Veiculo>();
-  const [placa, setPLaca] = useState(veiculo?.placa || '');
+  const [placa, setPLaca] = useState(veiculo?.veiculo_placa || '');
   const [placaError, setPlacaError] = useState<string | null>(null);
 
   useEffect(() => {
     if (veiculo) {
-      setValue('modelo', veiculo.modelo);
-      setValue('quilometragem', veiculo.quilometragem || '');
-      setValue('placa', veiculo.placa || '');
-      setValue('tipo_oleo', veiculo.tipo_oleo || '');
-      setValue('modelo_ultimo_oleo', veiculo.modelo_ultimo_oleo || '');
-      setValue('filtro_oleo', veiculo.filtro_oleo || '');
-      setValue('filtro_ar', veiculo.filtro_ar || '');
-      setValue('filtro_combustivel', veiculo.filtro_combustivel || '');
-      setValue('filtro_cambio', veiculo.filtro_cambio || '');
+      setValue('veiculo_marca', veiculo.veiculo_marca || '');
+      setValue('veiculo_modelo', veiculo.veiculo_modelo);
+      setValue('veiculo_cor', veiculo.veiculo_cor || '');
+      setValue('veiculo_placa', veiculo.veiculo_placa || '');
+      setValue('veiculo_km', veiculo.veiculo_km);
+      setValue('veiculo_motor', veiculo.veiculo_motor || '');
     }
   }, [veiculo, setValue]);
 
@@ -74,205 +71,144 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
   return (
     <ThemeProvider theme={theme}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col justify-center items-center h-full p-4 text-black">
-        <div className="flex flex-col mb-2 w-full items-center">
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="modelo" className="mb-1">Modelo:</label>
-            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
+        <div className="flex flex-col mb-2 w-full items-center"></div>
+        <div className="flex flex-col mb-2 w-full sm:w-1/2">
+            <label htmlFor="veiculo_marca" className="mb-1">Tipo de Óleo:</label>
+            {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
               <input
-                {...register('modelo', { required: 'Modelo é obrigatório' })}
+                {...register('veiculo_marca')}
                 type="text"
-                id="modelo"
+                id="veiculo_marca"
+                name="veiculo_marca"
                 className="text-black border border-gray-300 rounded-md p-1"
-                value={editedVeiculo?.modelo || ''}
-                onChange={(e) => handleChange(e, "modelo")}
+                value={editedVeiculo?.veiculo_marca || ''}
+                onChange={(e) => handleChange && handleChange(e, "veiculo_marca")}
               />
             ) : (
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${veiculo?.modelo}`}
+                value={`${veiculo?.veiculo_marca}`}
                 readOnly
               />
             )}
-            {errors.modelo && <p className="text-red-500 text-sm">{errors.modelo.message}</p>}
+            {errors.veiculo_marca && <span className="text-red-500">{errors.veiculo_marca.message}</span>}
           </div>
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="quilometragem" className="mb-1">Quilometragem:</label>
-            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
+            <label htmlFor="veiculo_modelo" className="mb-1">Modelo:</label>
+            {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
               <input
-                {...register('quilometragem', { required: 'Quilometragem é obrigatória' })}
+                {...register('veiculo_modelo', { required: 'Modelo é obrigatório' })}
                 type="text"
-                id="quilometragem"
+                id="veiculo_modelo"
                 className="text-black border border-gray-300 rounded-md p-1"
-                value={editedVeiculo?.quilometragem || ''}
-                onChange={(e) => handleChange(e, "quilometragem")}
+                value={editedVeiculo?.veiculo_modelo || ''}
+                onChange={(e) => handleChange(e, "veiculo_modelo")}
               />
             ) : (
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${veiculo?.quilometragem} km`}
+                value={`${veiculo?.veiculo_modelo}`}
                 readOnly
               />
             )}
-            {errors.quilometragem && <p className="text-red-500 text-sm">{errors.quilometragem.message}</p>}
+            {errors.veiculo_modelo && <p className="text-red-500 text-sm">{errors.veiculo_modelo.message}</p>}
+          </div>
+
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
+            <label htmlFor="veiculo_cor" className="mb-1">Modelo do Último Óleo:</label>
+            {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
+              <input
+                {...register('veiculo_cor')}
+                type="text"
+                id="veiculo_cor"
+                className="text-black border border-gray-300 rounded-md p-1"
+                value={editedVeiculo?.veiculo_cor || ''}
+                onChange={(e) => handleChange && handleChange(e, "veiculo_cor")}
+              />
+            ) : (
+              <input
+                className="text-txt border border-gray-300 rounded-md p-1"
+                type="text"
+                value={`${veiculo?.veiculo_cor}`}
+                readOnly
+              />
+            )}
+            {errors.veiculo_cor && <p className="text-red-500 text-sm">{errors.veiculo_cor.message}</p>}
+          </div>
+          
+          <div className="flex flex-col mb-2 w-full sm:w-1/2">
+            <label htmlFor="veiculo_km" className="mb-1">Quilometragem:</label>
+            {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
+              <input
+                {...register('veiculo_km', { required: 'Quilometragem é obrigatória' })}
+                type="text"
+                id="veiculo_km"
+                className="text-black border border-gray-300 rounded-md p-1"
+                value={editedVeiculo?.veiculo_km || ''}
+                onChange={(e) => handleChange(e, "veiculo_km")}
+              />
+            ) : (
+              <input
+                className="text-txt border border-gray-300 rounded-md p-1"
+                type="text"
+                value={`${veiculo?.veiculo_km} km`}
+                readOnly
+              />
+            )}
+            {errors.veiculo_km && <p className="text-red-500 text-sm">{errors.veiculo_km.message}</p>}
           </div>
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="placa" className="mb-1">Placa:</label>
-            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
+            <label htmlFor="veiculo_placa" className="mb-1">Placa:</label>
+            {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
               <input
-                {...register('placa', { required: 'PLaca é obrigatória' })}
+                {...register('veiculo_placa', { required: 'PLaca é obrigatória' })}
                 type="text"
-                id="placa"
+                id="veiculo_placa"
                 className="text-black border border-gray-300 rounded-md p-1"
                 value={placa || ''}
                 onChange={(e) => {
                   const formattedPlaca = formatPlaca(e.target.value);
                   setPLaca(formattedPlaca)
-                  handleChange && handleChange(e, "placa")
+                  handleChange && handleChange(e, "veiculo_placa")
                 }}
               />
             ) : (
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${veiculo?.placa}`}
+                value={`${veiculo?.veiculo_placa}`}
                 readOnly
               />
             )}
             {placaError && <span className="text-red-500">{placaError}</span>}
           </div>
+          
           <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="tipo_oleo" className="mb-1">Tipo de Óleo:</label>
-            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
+            <label htmlFor="veiculo_motor" className="mb-1">Filtro de Óleo:</label>
+            {isEditMode && editedVeiculo?.veiculo_motor === veiculo?.veiculo_motor ? (
               <input
-                {...register('tipo_oleo')}
                 type="text"
-                id="tipo_oleo"
-                name="tipo_oleo"
+                id="veiculo_motor"
+                name="veiculo_motor"
                 className="text-black border border-gray-300 rounded-md p-1"
-                value={editedVeiculo?.tipo_oleo || ''}
-                onChange={(e) => handleChange && handleChange(e, "tipo_oleo")}
+                value={editedVeiculo?.veiculo_motor || ''}
+                onChange={(e) => handleChange && handleChange(e, "veiculo_motor")}
               />
             ) : (
               <input
                 className="text-txt border border-gray-300 rounded-md p-1"
                 type="text"
-                value={`${veiculo?.tipo_oleo}`}
+                value={`${veiculo?.veiculo_motor}`}
                 readOnly
               />
             )}
-            {errors.tipo_oleo && <span className="text-red-500">{errors.tipo_oleo.message}</span>}
+            {errors.veiculo_motor && <p className="text-red-500 text-sm">{errors.veiculo_motor.message}</p>}
           </div>
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="modelo_ultimo_oleo" className="mb-1">Modelo do Último Óleo:</label>
-            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
-              <input
-                {...register('modelo_ultimo_oleo')}
-                type="text"
-                id="modelo_ultimo_oleo"
-                className="text-black border border-gray-300 rounded-md p-1"
-                value={editedVeiculo?.modelo_ultimo_oleo || ''}
-                onChange={(e) => handleChange && handleChange(e, "modelo_ultimo_oleo")}
-              />
-            ) : (
-              <input
-                className="text-txt border border-gray-300 rounded-md p-1"
-                type="text"
-                value={`${veiculo?.modelo_ultimo_oleo}`}
-                readOnly
-              />
-            )}
-            {errors.modelo_ultimo_oleo && <p className="text-red-500 text-sm">{errors.modelo_ultimo_oleo.message}</p>}
-          </div>
-
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="filtro_oleo" className="mb-1">Filtro de Óleo:</label>
-            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
-              <input
-                type="text"
-                id="filtro_oleo"
-                name="filtro_oleo"
-                className="text-black border border-gray-300 rounded-md p-1"
-                value={editedVeiculo?.filtro_oleo || ''}
-                onChange={(e) => handleChange && handleChange(e, "filtro_oleo")}
-              />
-            ) : (
-              <input
-                className="text-txt border border-gray-300 rounded-md p-1"
-                type="text"
-                value={`${veiculo?.filtro_oleo}`}
-                readOnly
-              />
-            )}
-            {errors.filtro_oleo && <p className="text-red-500 text-sm">{errors.filtro_oleo.message}</p>}
-          </div>
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="filtro_ar" className="mb-1">Filtro de Ar:</label>
-            {isEditMode && editedVeiculo?.id === veiculo?.id ? (
-              <input
-                type="text"
-                id="filtro_ar"
-                name="filtro_ar"
-                className="text-black border border-gray-300 rounded-md p-1"
-                value={editedVeiculo?.filtro_ar || ''}
-                onChange={(e) => handleChange && handleChange(e, "filtro_ar")}
-              />
-            ) : (
-              <input
-                className="text-txt border border-gray-300 rounded-md p-1"
-                type="text"
-                value={`${veiculo?.filtro_ar}`}
-                readOnly
-              />
-            )}
-            {errors.filtro_ar && <p className="text-red-500 text-sm">{errors.filtro_ar.message}</p>}
-          </div>
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="filtro_combustivel" className="mb-1">Filtro de Combustível:</label>
-            {isEditMode ? (
-              <input
-                type="text"
-                id="filtro_combustivel"
-                name="filtro_combustivel"
-                className="text-black border border-gray-300 rounded-md p-1"
-                value={editedVeiculo?.filtro_combustivel || ''}
-                onChange={(e) => handleChange && handleChange(e, "filtro_combustivel")}
-              />
-            ) : (
-              <input
-                className="text-txt border border-gray-300 rounded-md p-1"
-                type="text"
-                value={`${veiculo?.filtro_combustivel}`}
-                readOnly
-              />
-            )}
-            {errors.filtro_combustivel && <p className="text-red-500 text-sm">{errors.filtro_combustivel.message}</p>}
-          </div>
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="filtro_cambio" className="mb-1">Filtro de Câmbio:</label>
-            {isEditMode ? (
-              <input
-                type="text"
-                id="filtro_cambio"
-                name="filtro_cambio"
-                className="text-black border border-gray-300 rounded-md p-1"
-                value={editedVeiculo?.filtro_cambio || ''}
-                onChange={(e) => handleChange && handleChange(e, "filtro_cambio")}
-              />
-            ) : (
-              <input
-                className="text-txt border border-gray-300 rounded-md p-1"
-                type="text"
-                value={`${veiculo?.filtro_cambio}`}
-                readOnly
-              />
-            )}
-          </div>
-          {errors.filtro_cambio && <p className="text-red-500 text-sm">{errors.filtro_cambio.message}</p>}
-        </div>
+          
         <div className="flex justify-around py-2 pl-2">
-          {isEditMode && editedVeiculo?.id === veiculo?.id ? (
+          {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
             <div className="flex justify-around py-2 space-x-2">
               <Button onClick={handleToggleEditMode} variant="contained" style={{ color: 'white', background: 'red' }}>
                 Cancelar
@@ -289,7 +225,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
                 </Button>
               </div>
               <div>
-                <Button onClick={deleteVeiculo} variant="contained" color="error" startIcon={<DeleteIcon />} >
+                <Button onClick={() => veiculo?.veiculo_id && handleDeleteVeiculo(veiculo.veiculo_id)} variant="contained" color="error" startIcon={<DeleteIcon />} >
                   Excluir
                 </Button>
               </div>

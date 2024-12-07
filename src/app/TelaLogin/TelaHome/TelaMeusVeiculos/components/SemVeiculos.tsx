@@ -1,68 +1,55 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
+"use client";
 import Slider from "react-slick";
 import HeaderNavigation from "../../../../../components/HeaderNavigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal_AddVeiculos from "./modalAddVeiculos";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Veiculo } from "@/hooks/useVeiculos";
-import useVeiculos from "@/hooks/useVeiculos";
+import { Veiculo } from "@/app/api/api";
+import { useCreateVeiculo, useVeiculos } from "@/app/api/api";
+import { useSession } from "next-auth/react";
 
+interface SemVeiculosProps {
+  onAddVeiculo: (newVeiculo: Omit<Veiculo, 'veiculo_id'>) => Promise<void>;
+}
 
-export default function SemVeiculos() {
-  const url = 'http://localhost:3000/usuarios';
-  const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
+export default function SemVeiculos({ onAddVeiculo }: SemVeiculosProps) {
+  const { data: session } = useSession();
   const [openModalAddVeiculo, setOpenModalAddVeiculo] = useState(false);
-  const { createVeiculo } = useVeiculos(url);
-  const [reloadPage, setReloadPage] = useState(false);
   const router = useRouter();
+  const createVeiculoMutation = useCreateVeiculo();
+  
+  const { data: veiculos = [] } = useVeiculos(session?.user?.id);
 
   const handleCloseModalAddVeiculo = () => {
     setOpenModalAddVeiculo(false);
   };
 
-  const handleAddVeiculo = async (email: string, newVeiculo: Veiculo) => {
+  const handleAddVeiculo = async (newVeiculo: Omit<Veiculo, 'veiculo_id'>) => {
+    if (!session?.user?.id) {
+      console.error('Usuário não autenticado');
+      return;
+    }
     try {
-      await createVeiculo(email, newVeiculo);
-      await getVeiculos();
-      setReloadPage(true);
-      // setOpenModalAddVeiculo(false);
+      const veiculoData = {
+        ...newVeiculo,
+        id_usuario: Number(session.user.id), // Converter id_usuario para número
+        veiculo_km: Number(newVeiculo.veiculo_km)
+      };
+
+      await createVeiculoMutation.mutateAsync(veiculoData);
+      setOpenModalAddVeiculo(false);
+      router.push('/TelaLogin/TelaHome/TelaMeusVeiculos');
     } catch (error) {
-      console.log('Erro ao add o veiculo', error);
+      console.error('Erro ao adicionar veículo:', error);
     }
   };
-
-  async function getVeiculos() {
-    try {
-      const email = localStorage.getItem('userEmail') || '';
-      const response = await axios.get(`${url}?email=${email}`);
-      const user = response.data.find((user: any) => user.email === email);
-
-      if (user) {
-        setVeiculos(user.veiculos || []);
-      } else {
-        setVeiculos([]);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    getVeiculos();
-    if (reloadPage) {
-      setReloadPage(false);
-      window.location.reload();
-    }
-  }, [reloadPage])
 
   return (
     <main className="flex w-full h-dvh bg-fund flex-col">
       <HeaderNavigation />
       {veiculos.length === 0 && (
         <>
-          <div className="w-full  h-auto mt-20">
+          <div className="w-full h-auto mt-20">
             <Slider
               dots={true}
               fade={true}
@@ -89,8 +76,7 @@ export default function SemVeiculos() {
           </div>
           <div className="flex justify-center items-center mt-[40%] lg:mt-14">
             <button
-              className="flex justify-center items-center bg-txt text-grid w-40 h-20 border
-              rounded-md shadow-sm"
+              className="flex justify-center items-center bg-txt text-grid w-40 h-20 border rounded-md shadow-sm"
               onClick={() => setOpenModalAddVeiculo(true)}
             >
               Adicionar Veículo
@@ -104,6 +90,5 @@ export default function SemVeiculos() {
         onAdd={handleAddVeiculo}
       />
     </main>
-
   );
 }
