@@ -47,7 +47,7 @@ export default function TelaAgendamento() {
         <ThemeProvider theme={theme}>
             <main className="w-full h-full bg-fund">
                 <HeaderNavigation />
-                <div className='flex justify-center items-center w-full py-2 border-b border-stone-900'>
+                <div className='flex justify-center items-center w-full py-2 border-b border-stone-900 mt-10'>
                     <h2 className='text-txt text-center text-2xl'>Agendamentos</h2>
                 </div>
                 <section className='flex justify-center items-center w-full mt-[10%] lg:mt-[2%]'>

@@ -160,7 +160,7 @@ export default function MeusVeiculos() {
                     {openMais && (
                       <>
                         <div 
-                          className="fixed inset-0 opacity-75 z-40" 
+                          <div id='main-content' className="mt-[100px] flex flex-col space-y-4 justify-center items-center w-screen h-full pb-3 mx-1 mb-8">
                           style={{ backdropFilter: 'blur(5px)', marginTop: '85px' }}
                         />
                         <div className="absolute top-20 left-0 w-56 bg-bord rounded-lg shadow-lg z-50">
@@ -232,4 +232,3 @@ export default function MeusVeiculos() {
       </main>
     </ThemeProvider>
   );
-}

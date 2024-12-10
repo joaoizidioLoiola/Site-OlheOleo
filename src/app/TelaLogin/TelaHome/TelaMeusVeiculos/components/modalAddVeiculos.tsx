@@ -96,27 +96,20 @@ export default function Modal_AddVeiculos({
   return (
     <>
       {isOpen && (
-        <div className="fixed z-0 inset-0 overflow-y-auto">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-            </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
-              &#8203;
-            </span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all  pt-0 sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <h2 className="flex items-center text-lg leading-6 font-medium text-gray-900">
-                  Adicionar Novo Veículo{' '}
-                  <span className="flex ml-auto justify-end close cursor-pointer text-txt" onClick={onClose}>
-                    <IoCloseCircle size={28} />
-                  </span>
-                </h2>
-
-                <form onSubmit={handleSubmit(onSubmit)}>
+        <div className='w-full z-40 sm:z-20 absolute mt-[35px] sm:mt-[60px] flex justify-center bg-black'>
+          <div className="fixed mt-10 mb-10 overflow-hidden rounded-2xl bg-white border-2 pb-4 pt-2 sm:pb-2 px-3 max-w-[85%] min-h-[75%] sm:max-w-[600px]">
+            <h2 className="flex items-center text-lg leading-6 font-medium text-black border-b-2 px-3 pb-1">
+              Adicionar Novo Veículo{' '}
+              <span className="flex ml-auto justify-end close cursor-pointer text-txt" onClick={onClose}>
+                <IoCloseCircle size={28} />
+              </span>
+            </h2>
+            <div className='max-h-[600px] overflow-y-scroll mt-2 rounded-lg p-2 bg-white'>
+                <form onSubmit={handleSubmit(onSubmit) className='flex justify-center flex-col items-center'}>
                   <Image
                     src={selectedImage}
                     alt="Car Illustration"
-                    className="animate-flip-once w-[350px] h-[250px] mx-auto mt-3 mb-2 rounded-md"
+                    className="animate-flip-once w-[250px] h-[200px] sm:w-[350px] sm:h-[250px] sm:mx-auto mt-3 mb-2 rounded-md"
                     width={400}
                     height={250}
                   />
