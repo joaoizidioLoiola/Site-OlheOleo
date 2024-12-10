@@ -105,7 +105,7 @@ export default function Modal_AddVeiculos({
               </span>
             </h2>
             <div className='max-h-[600px] overflow-y-scroll mt-2 rounded-lg p-2 bg-white'>
-                <form onSubmit={handleSubmit(onSubmit) className='flex justify-center flex-col items-center'}>
+                <form onSubmit={handleSubmit(onSubmit)} className='flex justify-center flex-col items-center'>
                   <Image
                     src={selectedImage}
                     alt="Car Illustration"
@@ -160,7 +160,6 @@ export default function Modal_AddVeiculos({
                     Adicionar Veículo
                   </button>
                 </form>
-              </div>
             </div>
           </div>
         </div>

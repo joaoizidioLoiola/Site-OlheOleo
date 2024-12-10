@@ -43,8 +43,8 @@ export default function Home() {
     <main className="flex w-screen min-h-screen flex-col bg-fund items-center">
       <HeaderNavigation />
       <section className="w-full flex flex-col items-center mt-10">
-        <div className="w-11/12 max-w-4xl mt-10">
-          <Image src="/capa.png" alt="Capa" layout="responsive" width={900} height={506} objectFit="contain" />
+        <div className="w-7/12 max-w-2xl mt-10">
+          <Image src="/capa.png" alt="Capa" layout="responsive" width={768} height={500} objectFit="contain" />
         </div>
         <div className="text-center text-txt mt-4 text-lg border-b border-stone-900">
           <h2>Muito Prazer,<br />
@@ -54,4 +54,5 @@ export default function Home() {
       </section>
       <FooterNavigation />
     </main>
-  );
+    );
+  }

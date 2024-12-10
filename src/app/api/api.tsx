@@ -188,15 +188,18 @@ export const useRegister = () => {
   return useMutation(
     async (userData: Omit<User, 'id_usuario'>) => {
       const url = `${API_URL}users`;
+
+      const cpfLimpo = userData.cpf_usuario.replace(/\D/g, '');
+      const telefoneLimpo = userData.telefone_usuario.replace(/\D/g, '');
       
       // Criar payload simplificado
       const userDataToSend: RegisterUserData = {
-        cpf_usuario: userData.cpf_usuario,
+        cpf_usuario: cpfLimpo,
         nome_usuario: userData.nome_usuario,
         tipo_usuario: 1,
         email_usuario: userData.email_usuario,
         senha_usuario: userData.senha_usuario,
-        telefone_usuario: userData.telefone_usuario
+        telefone_usuario: telefoneLimpo
       };
 
       // Fazer requisição POST direta
