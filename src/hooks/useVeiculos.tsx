@@ -5,20 +5,7 @@ import axios, { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Agendamento, User } from '@/auth';
-
-export type Veiculo = {
-  id: string,
-  modelo: string,
-  url_imagem: string,
-  quilometragem: string,
-  placa: string,
-  tipo_oleo: string,
-  modelo_ultimo_oleo: string;
-  filtro_oleo: string;
-  filtro_ar: string;
-  filtro_combustivel: string;
-  filtro_cambio: string;
-}
+import { Veiculo } from '@/app/api/api';
 
 const useVeiculos = (apiUrl: string) => {
   const { data: session } = useSession();
@@ -32,7 +19,7 @@ const useVeiculos = (apiUrl: string) => {
   async function getVeiculos(email: string) {
     try {
       const response = await axios.get(apiUrl);
-      const usuarios = response.data.find((usuarios: User) => usuarios.email === email);
+      const usuarios = response.data.find((usuarios: User) => usuarios.email_usuario === email);
       if (usuarios) {
         setVeiculos(usuarios.veiculos || []);
         setUser(usuarios);
@@ -62,10 +49,10 @@ const useVeiculos = (apiUrl: string) => {
     try {
       const email = session?.user?.email || '';
       const response = await axios.get(`${apiUrl}`);
-      const user = response.data.find((usuarios: User) => usuarios.email === email);
+      const user = response.data.find((usuarios: User) => usuarios.email_usuario === email);
       if (user) {
         const updatedVeiculos = user.veiculos.filter(
-          (veiculo: Veiculo) => veiculo.id !== id
+          (veiculo: Veiculo) => veiculo.veiculo_id !== Number(id)
         );
         await axios.put(`${apiUrl}/${user.id}`, {
           ...user,
@@ -87,10 +74,10 @@ const useVeiculos = (apiUrl: string) => {
     try {
       const email = session?.user?.email || '';
       const response = await axios.get(apiUrl);
-      const user = response.data.find((usuarios: User) => usuarios.email === email);
+      const user = response.data.find((usuarios: User) => usuarios.email_usuario === email);
       if (user && editedVeiculo) {
         const updatedVeiculos = user.veiculos.map((veiculo: Veiculo) =>
-          veiculo.id === editedVeiculo.id ? { ...editedVeiculo } : veiculo
+          veiculo.veiculo_id === editedVeiculo.veiculo_id ? { ...editedVeiculo } : veiculo
         );
         await axios.put(`${apiUrl}/${user.id}`, {
           ...user,
@@ -119,28 +106,29 @@ const useVeiculos = (apiUrl: string) => {
     setIsEditMode(true);
   };
 
-  const createAgendamento = async (agendamentoData: Agendamento) => {
-    try {
-      if (!user) {
-        console.error('Usuário não autenticado.');
-        return;
-      }
-      // Adicionar novo agendamento ao usuário existente
-      const novoUsuario: User = {
-        ...user,
-        agendamentos: user.agendamentos ? [...user.agendamentos, agendamentoData] : [agendamentoData],
-      };
+  // const createAgendamento = async (agendamentoData: Agendamento) => {
+  //   try {
+  //     if (!user) {
+  //       console.error('Usuário não autenticado.');
+  //       return;
+  //     }
+  //     // Adicionar novo agendamento ao usuário existente
+  //     // const novoUsuario: User = {
+  //     //   ...user,
+  //     //   agendamentos: user.agendamentos ? [...user.agendamentos, agendamentoData] : [agendamentoData],
+  //     // };
 
-      // Atualizar o usuário com o novo agendamento
-      await axios.put(`${apiUrl}/${user.id}`, novoUsuario);
+  //     // Atualizar o usuário com o novo agendamento
+  //     await axios.put(`${apiUrl}/${user.id}`, novoUsuario);
 
-      // Atualizar o estado local do usuário
-      setUser(novoUsuario);
-    } catch (error) {
-      console.error('Erro ao criar agendamento:', error);
-      throw error;
-    }
-  };
+  //     // Atualizar o estado local do usuário
+  //     setUser(novoUsuario);
+  //   } catch (error) {
+  //     console.error('Erro ao criar agendamento:', error);
+  //     throw error;
+  //   }
+  // };
+
   useEffect(() => {
     const email = session?.user?.email || '';
     if (email) {
@@ -161,7 +149,6 @@ const useVeiculos = (apiUrl: string) => {
   return {
     veiculos,
     user,
-    createAgendamento,
     setVeiculos,
     getVeiculos,
     createVeiculo,

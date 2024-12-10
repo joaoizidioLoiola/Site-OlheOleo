@@ -134,6 +134,17 @@
         }
       ],
       "agendamentos": []
+    },
+    {
+      "id": "a9cd4727-3946-431e-a07f-dd616497d168",
+      "cpf": "142.123.112-4",
+      "telefone": "(88) 90995-9559",
+      "email": "izid@em.com",
+      "password": "1234",
+      "confirmPassword": "1234",
+      "name": "izidio",
+      "veiculos": [],
+      "agendamentos": []
     }
   ],
   "oficinas": [

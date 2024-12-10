@@ -1,14 +1,15 @@
 import axios from 'axios';
 
+const API_URL = process.env.API_URL;
+
 export interface User {
   id: string;
-  name: string;
-  url_imagem: string;
-  cpf: string;
-  email: string;
-  telefone: string;
-  password: string;
-  confirmPassword: string;
+  nome_usuario: string;
+  cpf_usuario: string;
+  email_usuario: string;
+  telefone_usuario: string;
+  senha_usuario: string;
+  confirmPassword_usuario: string;
   veiculos?: any[];
   agendamentos?: any[];
 }
@@ -32,7 +33,7 @@ interface RegisterResponse {
 }
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const url = 'http://localhost:3000/usuarios';
+  const url = `${API_URL}users`;
   try {
     const response = await axios.get(url, {
       params: {
@@ -56,12 +57,12 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 };
 
 export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'http://localhost:3000/usuarios';
+  const url = `${API_URL}users`;
 
   try {
     const cpfExistsResponse = await axios.get(url, {
       params: {
-        cpf: userData.cpf,
+        cpf: userData.cpf_usuario,
       },
     });
     const cpfExists = cpfExistsResponse.data.length > 0;
@@ -72,7 +73,7 @@ export const register = async (userData: User): Promise<RegisterResponse> => {
 
     const emailExistsResponse = await axios.get(url, {
       params: {
-        email: userData.email,
+        email: userData.email_usuario,
       },
     });
     const emailExists = emailExistsResponse.data.length > 0;
@@ -83,7 +84,7 @@ export const register = async (userData: User): Promise<RegisterResponse> => {
 
     const telefoneExistsResponse = await axios.get(url, {
       params: {
-        telefone: userData.telefone,
+        telefone: userData.telefone_usuario,
       },
     });
     const telefoneExists = telefoneExistsResponse.data.length > 0;

@@ -3,37 +3,35 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import UserForm from './UserForm';
-import { User } from "../../../../services/auth"
-import { register, RegisterResponse } from '@/auth';
+import { User } from '@/app/api/api';
+import { useRegister } from '@/app/api/api';
 
 const RegisterForm = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const registerMutation = useRegister();
 
   const handleRegister = async (userData: User) => {
-    setError(null);
-
     try {
-      const response: RegisterResponse = await register(userData);
+      await registerMutation.mutateAsync(userData);
       
-      if (response.success) {
-        const result = await signIn('register', {
-          email: userData.email,
-          password: userData.password,
-          redirect: false,
-        });
+      const result = await signIn('credentials', {
+        email: userData.email_usuario,
+        password: userData.senha_usuario,
+        redirect: false,
+      });
 
-        if (result && result.error) {
-          setError('Erro no cadastro. Por favor, tente novamente.');
-        } else {
-          router.push('/TelaLogin');
-        }
+      if (result?.error) {
+        setError('Erro no login após cadastro');
       } else {
-        setError('Erro no cadastro. Por favor, tente novamente.');
+        router.push('/TelaLogin');
       }
     } catch (error) {
-      console.error(error);
-      setError('Ocorreu um erro durante o cadastro. Por favor, tente novamente.');
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Erro durante o cadastro');
+      }
     }
   };
 

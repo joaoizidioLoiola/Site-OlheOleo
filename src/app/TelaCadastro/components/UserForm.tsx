@@ -1,54 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { User } from '../../../../services/auth';
-import { v4 as uuidv4 } from "uuid";
+import { User } from '@/app/api/api';
 
 type UserFormProps = {
   error: string | null;
   initialData?: User | null;
-  onSubmit: (userData: User) => void;
+  onSubmit: (userData: Omit<User, 'id_usuario'>) => void;
   isNewUser?: boolean;
   onChange?: (field: keyof User, value: string) => void;
   readOnly?: boolean;
 };
 
 const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNewUser, onChange, readOnly }) => {
+  const { control, handleSubmit, formState: { errors } } = useForm<User>({
+    defaultValues: {
+      nome_usuario: initialData?.nome_usuario || '',
+      cpf_usuario: initialData?.cpf_usuario || '',
+      email_usuario: initialData?.email_usuario || '',
+      telefone_usuario: initialData?.telefone_usuario || '',
+      senha_usuario: initialData?.senha_usuario || '',
+      tipo_usuario: initialData?.tipo_usuario || 1,
+    }
+  });
 
-  const { control, register, handleSubmit, setValue, formState: { errors } } = useForm<User>();
-
-  const [cpf, setCpf] = useState(initialData?.cpf || '');
-  const [telefone, setTelefone] = useState(initialData?.telefone || '');
-  const [password, setPassword] = useState(initialData?.password || '');
-  const [confirmPassword, setConfirmPassword] = useState(initialData?.confirmPassword || '');
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    if (initialData) {
-      setValue('name', initialData.name);
-      setValue('url_imagem', initialData.url_imagem);
-      setValue('cpf', initialData.cpf);
-      setValue('email', initialData.email);
-      setValue('telefone', initialData.telefone);
-      setValue('password', initialData.password);
-      setValue('confirmPassword', initialData.confirmPassword);
-    }
-  }, [initialData, setValue]);
-
-  const onFormSubmit = (data: User) => {
-    if (data.password !== data.confirmPassword) {
-      alert('As senhas não coincidem');
-      return;
-    }
-
-    const userData: User = {
-      ...data,
-      id: initialData?.id || uuidv4(),
-      veiculos: initialData?.veiculos || [],
-      agendamentos: initialData?.agendamentos || []
-    };
-
-    onSubmit(userData);
-  };
 
   const formatCPF = (value: string) => {
     return value
@@ -67,159 +42,181 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
       .replace(/(\d)(\d{4})$/, '$1-$2');
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const onFormSubmit = (data: User) => {
+    const userData: Omit<User, 'id_usuario'> = {
+      cpf_usuario: data.cpf_usuario,
+      nome_usuario: data.nome_usuario,
+      email_usuario: data.email_usuario,
+      telefone_usuario: data.telefone_usuario,
+      senha_usuario: data.senha_usuario,
+      tipo_usuario: data.tipo_usuario,
+    };
+
+    onSubmit(userData);
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className='justify-center items-center ml-2 w-[95%]' >
+    <form onSubmit={handleSubmit(onFormSubmit)} className='justify-center items-center ml-2 w-[95%]'>
       <div className="mb-4">
-        <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Nome:</label>
+        <label htmlFor="nome_usuario" className="block text-gray-700 text-sm font-bold mb-2">
+          Nome:
+        </label>
         <Controller
-          name='name'
+          name="nome_usuario"
           control={control}
-          defaultValue=''
           rules={{ required: 'Nome é obrigatório' }}
           render={({ field }) => (
             <input
               {...field}
               type="text"
-              id="name"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              readOnly={readOnly}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) onChange('nome_usuario', e.target.value);
+              }}
+            />
+          )}
+        />
+        {errors.nome_usuario && (
+          <p className="text-red-500 text-sm">{errors.nome_usuario.message}</p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="cpf_usuario" className="block text-gray-700 text-sm font-bold mb-2">
+          CPF:
+        </label>
+        <Controller
+          name="cpf_usuario"
+          control={control}
+          rules={{ required: 'CPF é obrigatório' }}
+          render={({ field: { onChange, value } }) => (
+            <input
+              type="text"
+              value={formatCPF(value)}
+              onChange={(e) => {
+                const formatted = formatCPF(e.target.value);
+                onChange(formatted);
+                
+              }}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="000.000.000-00"
               readOnly={readOnly}
             />
           )}
         />
-        {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+        {errors.cpf_usuario && (
+          <p className="text-red-500 text-sm">{errors.cpf_usuario.message}</p>
+        )}
       </div>
+
       <div className="mb-4">
-        <label htmlFor="cpf" className="block text-gray-700 text-sm font-bold mb-2">CPF:</label>
-        <input
-          {...register('cpf', { required: 'CPF é obrigatório' })}
-          name='cpf'
-          type="text"
-          id="cpf"
-          value={cpf}
-          onChange={(e) => {
-            const formattedCPF = formatCPF(e.target.value);
-            setCpf(formattedCPF);
-            onChange && onChange('cpf', formattedCPF.replace(/\D/g, ''));
+        <label htmlFor="telefone_usuario" className="block text-gray-700 text-sm font-bold mb-2">
+          Celular:
+        </label>
+        <Controller
+          name="telefone_usuario"
+          control={control}
+          rules={{ required: 'Telefone é obrigatório' }}
+          render={({ field: { onChange, value } }) => (
+            <input
+              type="text"
+              value={formatTelefone(value)}
+              onChange={(e) => {
+                const formatted = formatTelefone(e.target.value);
+                onChange(formatted);
+              }}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="(00) 00000-0000"
+              readOnly={readOnly}
+            />
+          )}
+        />
+        {errors.telefone_usuario && (
+          <p className="text-red-500 text-sm">{errors.telefone_usuario.message}</p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="email_usuario" className="block text-gray-700 text-sm font-bold mb-2">
+          E-mail:
+        </label>
+        <Controller
+          name="email_usuario"
+          control={control}
+          rules={{
+            required: 'E-mail é obrigatório',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'E-mail inválido',
+            },
           }}
-          readOnly={readOnly}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          placeholder='000.000.000-00'
-          required
+          render={({ field }) => (
+            <input
+              {...field}
+              type="email"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              readOnly={readOnly}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) onChange('email_usuario', e.target.value);
+              }}
+            />
+          )}
         />
+        {errors.email_usuario && (
+          <p className="text-red-500 text-sm">{errors.email_usuario.message}</p>
+        )}
       </div>
+
       <div className="mb-4">
-        <label htmlFor="telefone" className="block text-gray-700 text-sm font-bold mb-2">Celular:</label>
-        <input
-          {...register('telefone')}
-          name='telefone'
-          type="text"
-          id="telefone"
-          value={telefone}
-          onChange={(e) => {
-            const formattedTelefone = formatTelefone(e.target.value)
-            setTelefone(formattedTelefone);
-            onChange && onChange('telefone', formattedTelefone.replace(/\D/g, ''));
-          }}
-          readOnly={readOnly}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          placeholder="(00) 00000-0000"
-          required
-        />
-        {errors.cpf && <p className="text-red-500 text-sm">{errors.cpf.message}</p>}
-      </div>
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">E-mail:</label>
-        <input
-          {...register('email', { required: 'E-mail é obrigadtório' })}
-          type="email"
-          id="email"
-          readOnly={readOnly}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-      </div>
-      <div className="mb-4">
-        <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+        <label htmlFor="senha_usuario" className="block text-gray-700 text-sm font-bold mb-2">
           Senha:
         </label>
         <div className="relative">
-          <input
-            {...register('password', { required: 'Senha é obrigatória' })}
-            name="password"
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              onChange && onChange('password', e.target.value);
-            }}
-            readOnly={readOnly}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
+          <Controller
+            name="senha_usuario"
+            control={control}
+            rules={{ required: 'Senha é obrigatória' }}
+            render={({ field }) => (
+              <input
+                {...field}
+                type={showPassword ? 'text' : 'password'}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                readOnly={readOnly}
+                onChange={(e) => {
+                  field.onChange(e);
+                  if (onChange) onChange('senha_usuario', e.target.value);
+                }}
+              />
+            )}
           />
           <button
             type="button"
             className="absolute right-2 top-1/2 transform -translate-y-1/2"
-            onClick={togglePasswordVisibility}
+            onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-400 cursor-pointer"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 2c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm2 7a2 2 0 11-4 0 2 2 0 014 0zm-.707 2.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414-1.414l-2-2z"
-                  clipRule="evenodd"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
               </svg>
             ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-400 cursor-pointer"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 2c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm2 7a2 2 0 11-4 0 2 2 0 014 0zm-.707 2.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414-1.414l-2-2z"
-                  clipRule="evenodd"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clipRule="evenodd" />
+                <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
               </svg>
             )}
           </button>
-          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
         </div>
+        {errors.senha_usuario && (
+          <p className="text-red-500 text-sm">{errors.senha_usuario.message}</p>
+        )}
       </div>
-      <div className="mb-4">
-        <label
-          htmlFor="confirmPassword"
-          className="block text-gray-700 text-sm font-bold mb-2"
-        >
-          Confirmar Senha:
-        </label>
-        <input
-          {...register('confirmPassword', { required: 'Confirmação de senha é obrigatória' })}
-          name="confirmPassword"
-          type="password"
-          id="confirmPassword"
-          value={confirmPassword}
-          onChange={(e) => {
-            setConfirmPassword(e.target.value);
-          }}
-          readOnly={readOnly}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          required
-        />
-        {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
-      </div>
+
       {error && <p className="text-red-500 mb-4">{error}</p>}
+      
       {isNewUser && (
         <button
           type="submit"

@@ -1,18 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSession, signOut } from "next-auth/react";
 import HeaderNavigation from '../../../../components/HeaderNavigation';
 import UserForm from '@/app/TelaCadastro/components/UserForm';
 import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
-import axios from 'axios';
-import { useSession } from 'next-auth/react';
-import { User } from '../../../../../services/auth';
+import { User } from '@/app/api/api';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from "@mui/icons-material/Save";
-
+import { useUpdateUser, useDeleteUser } from '@/app/api/api';
+import axios from 'axios';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -41,6 +40,8 @@ const theme = createTheme({
   },
 });
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const ProfilePage: React.FC = () => {
   const { data: session } = useSession();
   const [userData, setUserData] = useState<User | null>(null);
@@ -49,12 +50,15 @@ const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
-  const url = 'http://localhost:3000/usuarios';
+  const url = `${API_URL}users`;
+
+  const updateUserMutation = useUpdateUser();
+  const deleteUserMutation = useDeleteUser();
 
   const getUserData = useCallback(async (email: string) => {
     try {
       const response = await axios.get(url);
-      const user = response.data.find((usuario: User) => usuario.email === email);
+      const user = response.data.find((usuario: User) => usuario.email_usuario === email);
       if (user) {
         setUserData(user);
       } else {
@@ -86,15 +90,25 @@ const ProfilePage: React.FC = () => {
   const handleSaveChanges = async () => {
     setError(null);
     try {
-      if (editedUser) {
-        const response = await axios.put(`${url}/${editedUser.id}`, editedUser);
-        if (response.status === 200) {
-          setUserData(response.data);
-          setIsEditMode(false);
-          alert('Dados atualizados com sucesso!');
-        } else {
-          setError('Erro ao atualizar os dados do usuário.');
-        }
+      if (editedUser && editedUser.id_usuario) {
+        await updateUserMutation.mutateAsync({
+          ...editedUser,
+          id_usuario: editedUser.id_usuario
+        });
+
+        // Força recarregar a sessão
+      await signOut({ redirect: false });
+      
+      setUserData(editedUser);
+      setIsEditMode(false);
+      alert('Dados atualizados com sucesso!');
+      
+      // Redireciona para login para atualizar a sessão
+      router.push('/TelaLogin');
+
+        setUserData(editedUser);
+        setIsEditMode(false);
+        alert('Dados atualizados com sucesso!');
       }
     } catch (error) {
       console.error('Erro ao atualizar os dados do usuário:', error);
@@ -105,16 +119,9 @@ const ProfilePage: React.FC = () => {
   const handleDeleteProfile = async () => {
     try {
       if (userData) {
-        const response = await axios.delete(`${url}/${userData.id}`);
-        const handleLogout = async () => {
-          await signOut({ redirect: false });
-        };
-        if (response.status === 200) {
-          handleLogout();
-          router.push('/TelaLogin');
-        } else {
-          setError('Erro ao excluir o perfil.');
-        }
+        await deleteUserMutation.mutateAsync(userData.id_usuario!.toString());
+        await signOut({ redirect: false });
+        router.push('/TelaLogin');
       }
     } catch (error) {
       console.error('Erro ao excluir o perfil:', error);
@@ -139,7 +146,6 @@ const ProfilePage: React.FC = () => {
     return '/avatarPerfil.svg';
   });
 
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedImage', selectedImage);
@@ -152,7 +158,6 @@ const ProfilePage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <main className='flex flex-col h-max bg-gray-100'> */}
       <main className='flex flex-col h-screen bg-gray-100 items-center'>
         <HeaderNavigation />
         <div className='max-w-[500px] flex justify-center flex-col'>

@@ -1,60 +1,60 @@
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
+import { User } from "../api";
 
-export interface User {
-  id: string;
-  nome: string;
-  url_imagem: string;
-  cpf: string;
-  email: string;
-  telefone: string;
-  password: string;
-}
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface RegisterResponse {
   success: boolean;
   user?: User;
+  message?: string;
 }
 
-export const register = async (userData: User): Promise<RegisterResponse> => {
-  const url = 'http://localhost:3000/usuarios';
-
+export const register = async (userData: Omit<User, 'id_usuario'>): Promise<RegisterResponse> => {
   try {
-
-    const newUser: User = {
+    const userWithId = {
       ...userData,
-      id: uuidv4(),
     };
 
-    // Verificar se o CPF já está cadastrado
-    const cpfExists = await checkIfExists(url, { cpf: userData.cpf });
-    if (cpfExists) {
-      return { success: false };
+    const cpfResponse = await axios.get(`${API_URL}/users`, {
+      params: { cpf_usuario: userData.cpf_usuario }
+    });
+    
+    if (cpfResponse.data.length > 0) {
+      return { 
+        success: false, 
+        message: 'CPF já cadastrado' 
+      };
     }
 
-    // Verificar se o email já está cadastrado
-    const emailExists = await checkIfExists(url, { email: userData.email });
-    if (emailExists) {
-      return { success: false };
+    const emailResponse = await axios.get(`${API_URL}/users`, {
+      params: { email_usuario: userData.email_usuario }
+    });
+
+    if (emailResponse.data.length > 0) {
+      return { 
+        success: false, 
+        message: 'Email já cadastrado' 
+      };
     }
 
-    // Verificar se o telefone já está cadastrado
-    const telefoneExists = await checkIfExists(url, { telefone: userData.telefone });
-    if (telefoneExists) {
-      return { success: false };
-    }
+    // Registra o usuário
+    const response = await axios.post(`${API_URL}/users`, userWithId);
 
-    // Submeter os dados do usuário para o backend
-    const response = await axios.post(url, newUser);
-    return { success: true, user: response.data };
+    return {
+      success: true,
+      user: response.data
+    };
+
   } catch (error) {
-    console.error('Error during registration:', error);
-    return { success: false };
+    if (error instanceof Error) {
+      return { 
+        success: false, 
+        message: error.message 
+      };
+    }
+    return { 
+      success: false,
+      message: 'Erro durante o cadastro' 
+    };
   }
-};
-
-// Função auxiliar para verificar se um dado já existe no backend
-const checkIfExists = async (url: string, params: any): Promise<boolean> => {
-  const response = await axios.get(url, { params });
-  return response.data.length > 0;
 };
