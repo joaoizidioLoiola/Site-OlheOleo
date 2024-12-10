@@ -7,7 +7,7 @@ import { Veiculo } from "@/app/api/api";
 import Slider from "react-slick";
 import HeaderNavigation from "../../../../components/HeaderNavigation";
 import Modal_AddVeiculos from "./components/modalAddVeiculos";
-import AgendarManu from '../TelaAgendamento/components/AgendarManu';
+// import AgendarManu from '../__TelaAgendamento/components/AgendarManu';
 import SemVeiculos from "./components/SemVeiculos";
 import VeiculoForm from "./components/VeiculoForm";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -229,7 +229,7 @@ export default function MeusVeiculos() {
           }}
         />
         
-        {openAgendarManu && <AgendarManu onClose={handleCloseAgendarManu} />}
+        {/* {openAgendarManu && <AgendarManu onClose={handleCloseAgendarManu} />} */}
         </main>
       </ThemeProvider>
     );
