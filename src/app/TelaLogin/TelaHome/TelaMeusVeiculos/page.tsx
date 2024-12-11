@@ -95,7 +95,7 @@ export default function MeusVeiculos() {
     try {
       await deleteVeiculoMutation.mutateAsync(veiculoId.toString());
       alert('Veículo excluído com sucesso!');
-      refetch(); // Atualiza a lista após deletar
+      refetch();
     } catch (error) {
       console.error('Erro ao excluir veículo:', error);
       alert('Erro ao excluir veículo');
