@@ -63,15 +63,15 @@ export default function SemVeiculos({ onAddVeiculo }: SemVeiculosProps) {
               centerMode={true}
               className="flex w-full justify-center items-center"
             >
-              <div className="">
-                <img src="/car2.jpg" alt="carro2" />
-              </div>
-              <div className="flex justify-center items-center">
-                <img src="/car3.jpg" alt="carro3" />
-              </div>
-              <div className="flex justify-center items-center">
-                <img src="/car4.jpg" alt="carro4" />
-              </div>
+                <div className="flex justify-center items-center">
+                  <img src="/car2.jpg" alt="carro2" className="w-full h-auto" />
+                </div>
+                <div className="flex justify-center items-center">
+                  <img src="/car3.jpg" alt="carro3" className="w-full h-auto" />
+                </div>
+                <div className="flex justify-center items-center">
+                  <img src="/car4.jpg" alt="carro4" className="w-full h-auto" />
+                </div>
             </Slider>
           </div>
           <div className="flex justify-center items-center mt-[40%] lg:mt-14">

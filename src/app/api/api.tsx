@@ -59,9 +59,21 @@ const apiCalls = {
     return data;
   },
 
-  createUser: async (user: Omit<User, 'id'>): Promise<User> => {
-    const { data } = await api.post('/users', user);
-    return data;
+  registerUser: async (userData: Omit<User, 'id_usuario'>): Promise<User> => {
+    const cpfLimpo = userData.cpf_usuario.replace(/\D/g, '');
+    const telefoneLimpo = userData.telefone_usuario.replace(/\D/g, '');
+
+    const userDataToSend: RegisterUserData = {
+      cpf_usuario: cpfLimpo,
+      nome_usuario: userData.nome_usuario,
+      tipo_usuario: 1,
+      email_usuario: userData.email_usuario,
+      senha_usuario: userData.senha_usuario,
+      telefone_usuario: telefoneLimpo
+    };
+
+    const response = await api.post('/users', userDataToSend);
+    return response.data;
   },
 
   updateUser: async (user: User): Promise<User> => {
@@ -182,37 +194,15 @@ export const useLogin = () => {
 export const useRegister = () => {
   const queryClient = useQueryClient();
   
-  return useMutation(
-    async (userData: Omit<User, 'id_usuario'>) => {
-      const url = `${API_URL}users`;
-
-      const cpfLimpo = userData.cpf_usuario.replace(/\D/g, '');
-      const telefoneLimpo = userData.telefone_usuario.replace(/\D/g, '');
-      
-      // Criar payload simplificado
-      const userDataToSend: RegisterUserData = {
-        cpf_usuario: cpfLimpo,
-        nome_usuario: userData.nome_usuario,
-        tipo_usuario: 1,
-        email_usuario: userData.email_usuario,
-        senha_usuario: userData.senha_usuario,
-        telefone_usuario: telefoneLimpo
-      };
-
-      // Fazer requisição POST direta
-      const response = await api.post(url, userDataToSend);
-      return response.data;
+  return useMutation(apiCalls.registerUser, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKeys.users);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('users');
-      },
-      onError: (error: Error) => {
-        console.error('Erro no registro:', error);
-      }
+    onError: (error: Error) => {
+      console.error('Erro no registro:', error);
     }
-  );
-};
+  });
+}
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();

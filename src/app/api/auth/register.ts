@@ -1,5 +1,6 @@
 import axios from "axios";
 import { User } from "../api";
+import apiCalls from './../api';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -11,26 +12,19 @@ export interface RegisterResponse {
 
 export const register = async (userData: Omit<User, 'id_usuario'>): Promise<RegisterResponse> => {
   try {
-    const userWithId = {
-      ...userData,
-    };
-
-    const cpfResponse = await axios.get(`${API_URL}/users`, {
-      params: { cpf_usuario: userData.cpf_usuario }
-    });
+    const cpfResponse = await apiCalls.getUsers();
+    const cpfExists = cpfResponse.some(user => user.cpf_usuario === userData.cpf_usuario);
     
-    if (cpfResponse.data.length > 0) {
+    if (cpfExists) {
       return { 
         success: false, 
         message: 'CPF já cadastrado' 
       };
     }
 
-    const emailResponse = await axios.get(`${API_URL}/users`, {
-      params: { email_usuario: userData.email_usuario }
-    });
+    const emailExists = cpfResponse.some(user => user.email_usuario === userData.email_usuario);
 
-    if (emailResponse.data.length > 0) {
+    if (emailExists) {
       return { 
         success: false, 
         message: 'Email já cadastrado' 
@@ -38,11 +32,11 @@ export const register = async (userData: Omit<User, 'id_usuario'>): Promise<Regi
     }
 
     // Registra o usuário
-    const response = await axios.post(`${API_URL}/users`, userWithId);
+    const user = await apiCalls.registerUser(userData);
 
     return {
       success: true,
-      user: response.data
+      user
     };
 
   } catch (error) {
