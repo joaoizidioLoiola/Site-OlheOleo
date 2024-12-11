@@ -50,15 +50,15 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
   const [placaError, setPlacaError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (veiculo) {
-      setValue('veiculo_marca', veiculo.veiculo_marca || '');
-      setValue('veiculo_modelo', veiculo.veiculo_modelo);
-      setValue('veiculo_cor', veiculo.veiculo_cor || '');
-      setValue('veiculo_placa', veiculo.veiculo_placa || '');
-      setValue('veiculo_km', veiculo.veiculo_km);
-      setValue('veiculo_motor', veiculo.veiculo_motor || '');
+    if (editedVeiculo) {
+      setValue('veiculo_marca', editedVeiculo.veiculo_marca || '');
+      setValue('veiculo_modelo', editedVeiculo.veiculo_modelo);
+      setValue('veiculo_cor', editedVeiculo.veiculo_cor || '');
+      setValue('veiculo_placa', editedVeiculo.veiculo_placa || '');
+      setValue('veiculo_km', editedVeiculo.veiculo_km);
+      setValue('veiculo_motor', editedVeiculo.veiculo_motor || '');
     }
-  }, [veiculo, setValue]);
+  }, [editedVeiculo, setValue]);
 
   const onFormSubmit = (data: Veiculo) => {
     onSubmit(data);
@@ -70,10 +70,10 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
 
   return (
     <ThemeProvider theme={theme}>
-      <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col justify-center items-center h-full p-4 text-black">
-        <div className="flex flex-col mb-2 w-full items-center"></div>
-        <div className="flex flex-col mb-2 w-full sm:w-1/2">
-            <label htmlFor="veiculo_marca" className="mb-1">Tipo de Óleo:</label>
+      <div className="flex justify-center items-center w-full h-full m-6">
+        <form onSubmit={handleSubmit(onFormSubmit)} className="w-full max-w-lg p-2 bg-white rounded-xl shadow-[0_4px_8px_rgba(0,0,0,0.1)">
+          <div className="flex flex-col mb-2 w-full">
+            <label htmlFor="veiculo_marca" className="mb-1">Marca do Veículo:</label>
             {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
               <input
                 {...register('veiculo_marca')}
@@ -94,7 +94,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
             )}
             {errors.veiculo_marca && <span className="text-red-500">{errors.veiculo_marca.message}</span>}
           </div>
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
+          <div className="flex flex-col mb-2 w-full">
             <label htmlFor="veiculo_modelo" className="mb-1">Modelo:</label>
             {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
               <input
@@ -116,7 +116,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
             {errors.veiculo_modelo && <p className="text-red-500 text-sm">{errors.veiculo_modelo.message}</p>}
           </div>
 
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
+          <div className="flex flex-col mb-2 w-full">
             <label htmlFor="veiculo_cor" className="mb-1">Modelo do Último Óleo:</label>
             {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
               <input
@@ -138,7 +138,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
             {errors.veiculo_cor && <p className="text-red-500 text-sm">{errors.veiculo_cor.message}</p>}
           </div>
           
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
+          <div className="flex flex-col mb-2 w-full">
             <label htmlFor="veiculo_km" className="mb-1">Quilometragem:</label>
             {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
               <input
@@ -159,11 +159,11 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
             )}
             {errors.veiculo_km && <p className="text-red-500 text-sm">{errors.veiculo_km.message}</p>}
           </div>
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
+          <div className="flex flex-col mb-2 w-full">
             <label htmlFor="veiculo_placa" className="mb-1">Placa:</label>
             {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
               <input
-                {...register('veiculo_placa', { required: 'PLaca é obrigatória' })}
+                {...register('veiculo_placa', { required: 'Placa é obrigatória' })}
                 type="text"
                 id="veiculo_placa"
                 className="text-black border border-gray-300 rounded-md p-1"
@@ -185,7 +185,7 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
             {placaError && <span className="text-red-500">{placaError}</span>}
           </div>
           
-          <div className="flex flex-col mb-2 w-full sm:w-1/2">
+          <div className="flex flex-col mb-2 w-full">
             <label htmlFor="veiculo_motor" className="mb-1">Filtro de Óleo:</label>
             {isEditMode && editedVeiculo?.veiculo_motor === veiculo?.veiculo_motor ? (
               <input
@@ -207,32 +207,33 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
             {errors.veiculo_motor && <p className="text-red-500 text-sm">{errors.veiculo_motor.message}</p>}
           </div>
           
-        <div className="flex justify-around py-2 pl-2">
-          {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
-            <div className="flex justify-around py-2 space-x-2">
-              <Button onClick={handleToggleEditMode} variant="contained" style={{ color: 'white', background: 'red' }}>
-                Cancelar
-              </Button>
-              <Button onClick={handleSaveChanges} variant="contained" endIcon={<SaveIcon />} style={{ color: 'white', background: 'green' }} >
-                Salvar
-              </Button>
-            </div>
-          ) : (
-            <div className="flex justify-around py-2">
-              <div className="mr-2">
-                <Button onClick={() => veiculo && handleEditVeiculo(veiculo)} variant="contained" color="ochre" style={{ color: 'white' }} >
-                  Editar
+          <div className="flex justify-around py-2">
+            {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (
+              <div className="flex justify-around py-2 space-x-2">
+                <Button onClick={handleToggleEditMode} variant="contained" style={{ color: 'white', background: 'red' }}>
+                  Cancelar
+                </Button>
+                <Button onClick={handleSaveChanges} variant="contained" endIcon={<SaveIcon />} style={{ color: 'white', background: 'green' }} >
+                  Salvar
                 </Button>
               </div>
-              <div>
-                <Button onClick={() => veiculo?.veiculo_id && handleDeleteVeiculo(veiculo.veiculo_id)} variant="contained" color="error" startIcon={<DeleteIcon />} >
-                  Excluir
-                </Button>
+            ) : (
+              <div className="flex justify-around py-2">
+                <div className="mr-2">
+                  <Button onClick={() => veiculo && handleEditVeiculo(veiculo)} variant="contained" color="ochre" style={{ color: 'white' }} >
+                    Editar
+                  </Button>
+                </div>
+                <div>
+                  <Button onClick={() => veiculo?.veiculo_id && handleDeleteVeiculo(veiculo.veiculo_id)} variant="contained" color="error" startIcon={<DeleteIcon />} >
+                    Excluir
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      </form>
+            )}
+          </div>
+        </form>
+      </div>
     </ThemeProvider>
   );
 };

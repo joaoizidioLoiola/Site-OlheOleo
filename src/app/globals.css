@@ -28,12 +28,6 @@ body {
   background-attachment: fixed;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
 /*CSS ERICk*/
 
 .bg-emerald-700 {
@@ -50,4 +44,36 @@ body {
 
 .bg-grey-500{
   background-color: #f8f8f8;
+}
+
+/* Estilos para garantir slider horizontal */
+.slick-slider {
+  width: 100%;
+  overflow: hidden;
+}
+
+.slick-track {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+.slick-slide {
+  float: none !important;
+  height: auto !important;
+}
+
+.slick-slide > div {
+  height: 100%;
+}
+
+@media (max-width: 640px) {
+  .dropdown-fixed {
+    margin-top: 30px;
+  }
+}
+
+@media (min-width: 641px) {
+  .dropdown-fixed {
+    margin-top: 5px;
+  }
 }
