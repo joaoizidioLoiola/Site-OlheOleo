@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useSession } from 'next-auth/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -34,8 +33,6 @@ export interface RegisterUserData {
   telefone_usuario: string;
   senha_usuario: string;
 }
-
-
 
 const api = axios.create({
   baseURL: API_URL,

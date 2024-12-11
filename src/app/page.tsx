@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 
-const API_URL = process.env.API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 
 export default function Home() {
@@ -17,12 +17,11 @@ export default function Home() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("https://api-type-6-semestre.onrender.com/users");
+        const response = await axios.get(`{API_URL}users`);
         if (response.status === 200 && response.data) {
-          console.log('Dados recebidos:', response.data);
           setUsers(response.data);
         } else {
-          console.error('Resposta vazia ou inválida');
+          null;
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {

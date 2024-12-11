@@ -3,9 +3,7 @@ import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
 import { CgProfile } from "react-icons/cg";
-import { useRouter, usePathname } from 'next/navigation'
 import { useSession } from "next-auth/react";
-
 
 export default function SidebarMenu() {
   const { data: session, status } = useSession();
@@ -75,7 +73,6 @@ export default function SidebarMenu() {
           </Link>
         </div>
       )}
-
     </div>
   )
 }
