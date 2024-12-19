@@ -134,7 +134,7 @@ export default function MeusVeiculos() {
   }
   return (
     <ThemeProvider theme={theme}>
-      <main className="flex flex-col max-w-screen h-full bg-fund overflow-x-hidden">
+      <main className="flex flex-col max-w-screen h-screen bg-fund overflow-x-hidden">
         <HeaderNavigation />
         <Slider
           dots={false}

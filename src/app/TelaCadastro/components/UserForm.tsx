@@ -98,7 +98,6 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
               onChange={(e) => {
                 const formatted = formatCPF(e.target.value);
                 onChange(formatted);
-                
               }}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="000.000.000-00"
