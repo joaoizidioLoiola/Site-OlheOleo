@@ -42,7 +42,7 @@ export default function Home() {
     <main className="flex w-screen min-h-screen flex-col bg-fund items-center">
       <HeaderNavigation />
       <section className="w-full flex flex-col items-center mt-10">
-        <div className="w-7/12 max-w-2xl 2xl:max-w-5xl mt-10">
+        <div className="w-10/12 max-w-2xl 2xl:max-w-5xl mt-10">
           <Image src="/capa.png" alt="Capa" layout="responsive" width={768} height={600} objectFit="contain" />
         </div>
         <div className="text-center text-txt mt-4 text-lg border-b border-stone-900">

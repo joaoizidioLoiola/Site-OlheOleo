@@ -1,5 +1,6 @@
 import HeaderNavigation from '../../components/HeaderNavigation';
 import LoginForm from './components/LoginForm';
+import FooterNavigation from "@/app/TelaLogin/TelaHome/TelaPerfil/components/FooterNavigation";
 
 const LoginPage = () => {
   return (

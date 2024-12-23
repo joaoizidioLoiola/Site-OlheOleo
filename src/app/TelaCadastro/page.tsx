@@ -3,7 +3,7 @@ import RegisterForm from './components/RegisterForm';
 
 const RegisterPage = () => {
   return (
-    <main className="flex flex-col h-full bg-gray-100">
+    <main className="flex flex-col h-screen sm:h-full bg-gray-100">
       <HeaderNavigation />
       <div className="flex flex-col items-center justify-center bg-white p-8 rounded-lg shadow-md w-full max-w-sm mx-auto mb-4 mt-24">
         <h2 className="flex justify-center text-txt text-2xl font-bold mb-2 border-b">Faça seu Cadastro</h2>

@@ -26,14 +26,14 @@ export default function HeaderNavigation() {
         <section style={{ minWidth: '2.5rem' }}>
           <div className="flex items-center space-x-4 justify-end">
             {status === "loading" ? (
-              <span>Carregando...</span>
+              <span className='text-white mr-3'>Carregando...</span>
             ) : session ? (
               <span className='text-white'>Olá {session.user?.name}</span>
             ) : (
-              <div className="flex space-x-2">
-                <Link href="/TelaLogin" className="text-white">Entre</Link>
-                <span>ou</span>
-                <Link href="/TelaCadastro" className="text-white">Cadastre-se</Link>
+              <div className="flex space-x-2 mr-3">
+                <Link href="/TelaLogin" className="text-white">Entrar</Link>
+                <span className='text-gray-400 hidden sm:block'>ou</span>
+                <Link href="/TelaCadastro" className="text-white hidden sm:block">Cadastrar-se</Link>
               </div>
             )}
           </div>

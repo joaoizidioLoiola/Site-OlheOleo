@@ -78,7 +78,9 @@ export default function LoginForm() {
           )}
         />
         {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-        <a href="#" className="flex justify-end text-sm text-txt hover:text-gray-400">Esqueceu a senha?</a>
+        <div className="flex justify-end text-sm text-txt">
+          <a href="/" className="hover:text-gray-400">Esqueceu a senha?</a>
+        </div>
       </div>
       <button
         type="submit"
