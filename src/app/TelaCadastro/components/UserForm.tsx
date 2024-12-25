@@ -56,7 +56,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, error, initialData, isNew
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className='justify-center items-center ml-2 w-[95%]'>
+    <form onSubmit={handleSubmit(onFormSubmit)} className='justify-center items-center ml-2 w-[95%] h-full'>
       <div className="mb-4">
         <label htmlFor="nome_usuario" className="block text-gray-700 text-sm font-bold mb-2">
           Nome:

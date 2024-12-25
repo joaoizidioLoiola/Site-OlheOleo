@@ -147,7 +147,7 @@ export default function MeusVeiculos() {
           swipeToSlide={true} 
         >
           {veiculos.map((veiculo: Veiculo) => (
-            <div key={veiculo.veiculo_id} className="px-2">
+            <div key={veiculo.veiculo_id} className="px-2 flex justify-center items-center">
               {/* Dropdown */}
               <div className="fixed flex justify-start items-center mr-5 dropdown-fixed">
                 <div className="items-center justify-center">
@@ -189,21 +189,23 @@ export default function MeusVeiculos() {
                 </div>
               </div>
               
-              <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-lg sm:w-3/4 mt-24">
-                <VeiculoForm
-                  veiculo={veiculo}
-                  isEditMode={isEditMode}
-                  editedVeiculo={editedVeiculo}
-                  handleSaveChanges={handleSaveChanges}
-                  handleToggleEditMode={handleToggleEditMode}
-                  handleDeleteVeiculo={handleDeleteVeiculo}
-                  handleChange={handleChange}
-                  deleteVeiculo={() => {
-                    queryClient.invalidateQueries(['veiculos', session?.user?.id]);
-                  }}
-                  handleEditVeiculo={() => handleEditVeiculo(veiculo)}
-                  onSubmit={handleSaveChanges}
-                />
+              <div className="flex h-full w-full items-center justify-center mt-24">
+                <div className="w-full overflow-hidden rounded-lg">
+                  <VeiculoForm
+                    veiculo={veiculo}
+                    isEditMode={isEditMode}
+                    editedVeiculo={editedVeiculo}
+                    handleSaveChanges={handleSaveChanges}
+                    handleToggleEditMode={handleToggleEditMode}
+                    handleDeleteVeiculo={handleDeleteVeiculo}
+                    handleChange={handleChange}
+                    deleteVeiculo={() => {
+                      queryClient.invalidateQueries(['veiculos', session?.user?.id]);
+                    }}
+                    handleEditVeiculo={() => handleEditVeiculo(veiculo)}
+                    onSubmit={handleSaveChanges}
+                  />
+                </div>
               </div>
             </div>
           ))}

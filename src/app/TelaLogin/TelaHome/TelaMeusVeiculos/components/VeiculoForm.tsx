@@ -70,8 +70,8 @@ const VeiculoForm: React.FC<VeiculoFormProps> = ({ veiculo, onSubmit, isEditMode
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="flex justify-center items-center w-full h-full m-6">
-        <form onSubmit={handleSubmit(onFormSubmit)} className="w-full max-w-lg p-2 bg-white rounded-xl shadow-[0_4px_8px_rgba(0,0,0,0.1)">
+      <div className="flex justify-center items-center w-full h-full m-6 text-black">
+        <form onSubmit={handleSubmit(onFormSubmit)} className="min-w-[85%] row justify-center items-center max-w-lg p-2 bg-white rounded-xl shadow-[0_4px_8px_rgba(0,0,0,0.1)">
           <div className="flex flex-col mb-2 w-full">
             <label htmlFor="veiculo_marca" className="mb-1">Marca do Veículo:</label>
             {isEditMode && editedVeiculo?.veiculo_id === veiculo?.veiculo_id ? (

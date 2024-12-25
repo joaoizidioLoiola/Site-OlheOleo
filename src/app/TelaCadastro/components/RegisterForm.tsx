@@ -36,7 +36,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+    <div className="bg-white p-8 rounded-lg shadow-md w-full h-full max-w-sm">
       <UserForm onSubmit={handleRegister} error={error} isNewUser={true} />
     </div>
   );
